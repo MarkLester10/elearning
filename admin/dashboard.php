@@ -85,7 +85,7 @@ $subjectsCount = $dashboard->getSubjectsCount();
             </div> -->
             </div>
 
-        </div><!-- /.container-fluid -->
+        </div><!-- /.container-fluidsadfa -->
 </section>
 
 <!-- /.content -->
