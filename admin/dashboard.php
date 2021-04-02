@@ -4,10 +4,6 @@ require_once '../core.php';
 require_once '../path.php';
 require_once  '../app/includes/admin/header.php';
 
-$dashboard = new Dashboard();
-$usersCount = $dashboard->getUsersCount();
-$departmentsCount = $dashboard->getDepartmentsCount();
-$subjectsCount = $dashboard->getSubjectsCount();
 
 ?>
 
@@ -21,7 +17,7 @@ $subjectsCount = $dashboard->getSubjectsCount();
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3><?php echo $usersCount ?></h3>
+                        <h3>4</h3>
 
                         <p>Users</p>
                     </div>
@@ -36,8 +32,8 @@ $subjectsCount = $dashboard->getSubjectsCount();
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3><?php echo $departmentsCount ?></h3>
-                        <p>Departments</p>
+                        <h3>5</h3>
+                        <p>Types</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-list-alt"></i>
@@ -50,8 +46,8 @@ $subjectsCount = $dashboard->getSubjectsCount();
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3><?php echo $subjectsCount ?></h3>
-                        <p>Subjects</p>
+                        <h3>6</h3>
+                        <p>Loans</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-money-check"></i>
@@ -64,9 +60,9 @@ $subjectsCount = $dashboard->getSubjectsCount();
                 <!-- small box -->
                 <div class="small-box bg-secondary">
                     <div class="inner">
-                        <h3>5</h3>
+                        <h3>8</h3>
 
-                        <p>Class</p>
+                        <p>Payments</p>
                     </div>
                     <div class="icon">
                         <i class="far fa-credit-card"></i>
@@ -76,7 +72,7 @@ $subjectsCount = $dashboard->getSubjectsCount();
             </div>
             <!-- ./col -->
             <div class="col-md-6 mx-auto mt-5">
-                <h5 class="text-center">Monitoring Summary</h5>
+                <h5 class="text-center">Loan Summary</h5>
                 <canvas id="myChart" width="400" height="200"></canvas>
                 <!-- </div>
             <div class="col-md-6 mt-5">
@@ -97,16 +93,16 @@ $subjectsCount = $dashboard->getSubjectsCount();
     // BAR GRAPH
     var ctx = document.getElementById('myChart').getContext('2d');
     var usersCount = "<?php echo $usersCount ?>";
-    var departmentsCount = "<?php echo $departmentsCount ?>";
-    var subjectsCount = "<?php echo $subjectsCount ?>";
-    var paymentsCount = 8;
+    var typesCount = "<?php echo $loanTypesCount ?>";
+    var loansCount = "<?php echo $loansCount ?>";
+    var paymentsCount = "<?php echo $paymentsCount ?>";
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Users', 'Loans', 'Users', 'Payments'],
+            labels: ['Types', 'Loans', 'Users', 'Payments'],
             datasets: [{
                 label: 'Total Result',
-                data: [usersCount, departmentsCount, subjectsCount, paymentsCount],
+                data: [typesCount, loansCount, usersCount, paymentsCount],
                 backgroundColor: [
                     '#17a2b8',
                     '#28a745',
