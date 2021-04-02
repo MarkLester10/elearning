@@ -4,6 +4,10 @@ require_once '../core.php';
 require_once '../path.php';
 require_once  '../app/includes/admin/header.php';
 
+$dashboard = new Dashboard();
+$usersCount = $dashboard->getUsersCount();
+$departmentsCount = $dashboard->getDepartmentsCount();
+$subjectsCount = $dashboard->getSubjectsCount();
 
 ?>
 
@@ -17,7 +21,7 @@ require_once  '../app/includes/admin/header.php';
                 <!-- small box -->
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>4</h3>
+                        <h3><?php echo $usersCount ?></h3>
 
                         <p>Users</p>
                     </div>
@@ -32,8 +36,8 @@ require_once  '../app/includes/admin/header.php';
                 <!-- small box -->
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>5</h3>
-                        <p>Types</p>
+                        <h3><?php echo $departmentsCount ?></h3>
+                        <p>Departments</p>
                     </div>
                     <div class="icon">
                         <i class="fa fa-list-alt"></i>
@@ -46,8 +50,8 @@ require_once  '../app/includes/admin/header.php';
                 <!-- small box -->
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>6</h3>
-                        <p>Loans</p>
+                        <h3><?php echo $subjectsCount ?></h3>
+                        <p>Subjects</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-money-check"></i>
@@ -60,9 +64,9 @@ require_once  '../app/includes/admin/header.php';
                 <!-- small box -->
                 <div class="small-box bg-secondary">
                     <div class="inner">
-                        <h3>8</h3>
+                        <h3>5</h3>
 
-                        <p>Payments</p>
+                        <p>Class</p>
                     </div>
                     <div class="icon">
                         <i class="far fa-credit-card"></i>
@@ -72,7 +76,7 @@ require_once  '../app/includes/admin/header.php';
             </div>
             <!-- ./col -->
             <div class="col-md-6 mx-auto mt-5">
-                <h5 class="text-center">Loan Summary</h5>
+                <h5 class="text-center">Monitoring Summary</h5>
                 <canvas id="myChart" width="400" height="200"></canvas>
                 <!-- </div>
             <div class="col-md-6 mt-5">
@@ -93,16 +97,16 @@ require_once  '../app/includes/admin/header.php';
     // BAR GRAPH
     var ctx = document.getElementById('myChart').getContext('2d');
     var usersCount = "<?php echo $usersCount ?>";
-    var typesCount = "<?php echo $loanTypesCount ?>";
-    var loansCount = "<?php echo $loansCount ?>";
-    var paymentsCount = "<?php echo $paymentsCount ?>";
+    var departmentsCount = "<?php echo $departmentsCount ?>";
+    var subjectsCount = "<?php echo $subjectsCount ?>";
+    var paymentsCount = 8;
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Types', 'Loans', 'Users', 'Payments'],
+            labels: ['Users', 'Loans', 'Users', 'Payments'],
             datasets: [{
                 label: 'Total Result',
-                data: [typesCount, loansCount, usersCount, paymentsCount],
+                data: [usersCount, departmentsCount, subjectsCount, paymentsCount],
                 backgroundColor: [
                     '#17a2b8',
                     '#28a745',

@@ -33,12 +33,12 @@
                 </a>
             </li>
             <li class="nav-item menu-open
-            <?php echo (strpos(CURRENT_URL, 'type') !== false) ? 'active' : '' ?>
+            <?php echo (strpos(CURRENT_URL, 'subject') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo BASE_URL . 'admin/types.php' ?>" class="nav-link ">
+                <a href="<?php echo BASE_URL . 'admin/subjects.php' ?>" class="nav-link ">
                     <i class="nav-icon fa fa-list-alt"></i>
                     <p>
-                        Loan Types
+                        Subjects
                     </p>
                 </a>
             </li>
