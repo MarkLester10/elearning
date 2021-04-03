@@ -32,7 +32,6 @@ $users = $adminUser->index();
                                 <th scope="col">Image</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Position</th>
-                                <th scope="col">Actions</th>
 
                             </tr>
                         </thead>
@@ -51,21 +50,7 @@ $users = $adminUser->index();
                                     <td><?php echo $adminUser->getPosition($singleUser->position_id)->name ?></td>
 
 
-                                    <td class="d-flex">
-                                        <form action="admin_user_update.php" method="POST">
-                                            <input type="hidden" name="id" value="<?php echo $singleUser->id ?>">
-                                            <button type="submit" class="text-warning mr-3" style="border:none; background:none">
-                                                <i class="fas fa-pen"></i>
-                                            </button>
-                                        </form>
-                                        <form action="admin_user_delete.php" method="POST">
-                                            <input type="hidden" name="id" value="<?php echo $singleUser->id ?>">
-                                            <button type="submit" style="border:none; background:none">
-                                                <i class="fas fa-trash text-danger"></i>
-                                            </button>
-                                        </form>
 
-                                    </td>
                                 </tr>
                             <?php endforeach; ?>
 

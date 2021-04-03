@@ -12,75 +12,70 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
-            <li class="nav-item menu-open
+            <?php if ($_SESSION['position_id'] === 1) : ?>
+                <li class="nav-item menu-open
                 <?php echo (strpos(CURRENT_URL, 'dashboard') !== false) ? 'active' : '' ?>
                 ">
-                <a href="<?php echo 'dashboard.php' ?>" class="nav-link">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                        Dashboard
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item menu-open
+                    <a href="<?php echo 'dashboard.php' ?>" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open
             <?php echo (strpos(CURRENT_URL, 'admin_user') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo 'admin_users.php' ?>" class="nav-link">
-                    <i class="nav-icon fas fa-users"></i>
-                    <p>
-                        Users
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item menu-open
+                    <a href="<?php echo 'admin_users.php' ?>" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Users
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open
             <?php echo (strpos(CURRENT_URL, 'subject') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo 'subjects.php' ?>" class="nav-link ">
-                    <i class="nav-icon fa fa-list-alt"></i>
-                    <p>
-                        Subjects
-                    </p>
-                </a>
-            </li>
+                    <a href="<?php echo 'subjects.php' ?>" class="nav-link ">
+                        <i class="nav-icon fa fa-list-alt"></i>
+                        <p>
+                            Subjects
+                        </p>
+                    </a>
+                </li>
 
-            <li class="nav-item menu-open
+                <li class="nav-item menu-open
             <?php echo (strpos(CURRENT_URL, 'department') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo  'departments.php' ?>" class="nav-link">
-                    <i class="nav-icon far fa-building"></i>
-                    <p>
-                        Departments
-                    </p>
-                </a>
-            </li>
+                    <a href="<?php echo  'departments.php' ?>" class="nav-link">
+                        <i class="nav-icon far fa-building"></i>
+                        <p>
+                            Departments
+                        </p>
+                    </a>
+                </li>
+            <?php endif; ?>
 
-
-            <li class="nav-item menu-open">
-                <a href="#" class=" nav-link ">
-                    <i class="nav-icon fas fa-plus-square"></i>
-                    <p>
-                        Add Room
-                    </p>
-                </a>
-            </li>
-
-            <li class="nav-item menu-open">
-                <a href="#" class=" nav-link ">
-                    <i class="nav-icon fab fa-google"></i>
-                    <p>
-                        Add Google Meet Link
-                    </p>
-                </a>
-            </li>
-
-            <li class="nav-item menu-open">
-                <a href="#" class=" nav-link ">
-                    <i class="nav-icon fas fa-user-tie"></i>
-                    <p>
-                        Monitoring Staff
-                    </p>
-                </a>
-            </li>
+            <?php if ($_SESSION['position_id'] === 2) : ?>
+                <li class="nav-item menu-open
+                <?php echo (strpos(CURRENT_URL, 'faculty_dashboard') !== false) ? 'active' : '' ?>
+                ">
+                    <a href="<?php echo 'faculty_dashboard.php' ?>" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="#" class=" nav-link ">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>
+                            Monitoring Result
+                        </p>
+                    </a>
+                </li>
+            <?php endif; ?>
 
         </ul>
     </nav>

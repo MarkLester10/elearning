@@ -34,3 +34,18 @@ class Connection
         return $this->conn;
     }
 }
+
+
+
+$dsn = 'mysql:host=' . HOST . ';dbname=' . DB_NAME;
+
+try {
+    $conn = new PDO($dsn, USERNAME, PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Fetch object
+    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+    $conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); // for LIMITS
+
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+}

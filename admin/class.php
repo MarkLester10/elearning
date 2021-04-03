@@ -2,7 +2,16 @@
 ob_start();
 require_once '../core.php';
 require_once '../path.php';
-require_once  '../app/includes/admin/header.php';
+require_once  '../app/includes/admin/header_dashboard.php';
+
+$class = new Classes();
+$activeUser = $class->getUser($_SESSION['id']);
+if (!isset($_GET['id'])) {
+  redirect('faculty_dashboard.php');
+}
+$activeClass = $class->getClass($_GET['id']);
+
+
 ?>
 
 <!-- Main content -->
@@ -15,11 +24,15 @@ require_once  '../app/includes/admin/header.php';
       <div class="container mx-auto relative -top-16">
         <div class="flex items-center justify-center flex-col">
           <div class="bg-white h-32 p-2 w-32 rounded-full">
-            <img src="../assets/imgs/faculty/placeholder.png" class="h-full w-full object-cover rounded-full ring"
-              alt="">
+            <?php if ($activeUser->image) : ?>
+              <img src="../assets/imgs/profiles/<?php echo $activeUser->image ?>" class="h-full w-full object-cover rounded-full ring" alt="">
+            <?php else : ?>
+              <img src="https://ui-avatars.com/api/?name=<?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?>" class="h-full w-full object-cover rounded-full ring" alt="profile">
+            <?php endif ?>
+
           </div>
           <div class="mt-4 text-center">
-            <h1 class="text-lg font-bold">John Doe</h1>
+            <h1 class="text-lg font-bold"><?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?></h1>
             <hr class="block my-2">
             <h2 class="uppercase">Faculty</h2>
           </div>
@@ -30,10 +43,10 @@ require_once  '../app/includes/admin/header.php';
           <ol class="breadcrumb">
             <li class="breadcrumb-item flex items-center gap-2">
               <i class="fa fa-check-circle text-green-500"></i>
-              <a href="#">Room List</a>
+              <a href="faculty_dashboard.php">Room List</a>
             </li>
             <li class="breadcrumb-item">
-              COLLEGE OF SOMETHING Monday 2:30PM - 4:30PM ELECT-415
+              <?php echo $activeClass->scheduled_class ?>
           </ol>
         </nav>
 
@@ -52,7 +65,7 @@ require_once  '../app/includes/admin/header.php';
 
         <div class="row  p-2 md:p-4">
           <div class="col-lg-8 p-4">
-            <h1 class="font-bold uppercase text-2xl text-center">COLLEGE OF SOMETHING Monday 2:30PM - 4:30PM ELECT-415
+            <h1 class="font-bold uppercase text-2xl text-center"><?php echo $activeClass->scheduled_class ?>
             </h1>
 
             <form action="#" class="mt-12">
@@ -64,8 +77,7 @@ require_once  '../app/includes/admin/header.php';
 
               <div class="form-group">
                 <label for="#">Class Screen Shot</label>
-                <input class="form-control" type="file" name="screen_shot"
-                  onchange="displayImage(this, '#screenshotPreview')">
+                <input class="form-control" type="file" name="screen_shot" onchange="displayImage(this, '#screenshotPreview')">
               </div>
 
               <div class="form-group">
@@ -75,7 +87,7 @@ require_once  '../app/includes/admin/header.php';
                   your records.
                 </small>
                 <br>
-                <a href="#" class="btn btn-success btn-md mt-4" target="_blank" id="start_class">Go to Class</a>
+                <a href="<?php echo $activeClass->google_meet_link ?>" class="btn btn-success btn-md mt-4" target="_blank" id="start_class">Go to Class</a>
                 <div class="hidden" id="end_class">
                   <form action="#">
                     <input type="hidden" name="is_class_started">
@@ -103,7 +115,7 @@ require_once  '../app/includes/admin/header.php';
                 <i class="fa fa-user"></i>
                 Faculty
               </div>
-              <h1 class="font-bold text-green-400">John Doe</h1>
+              <h1 class="font-bold text-green-400"><?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?></h1>
             </div>
 
             <div class="flex items-center justify-between">
@@ -126,21 +138,21 @@ require_once  '../app/includes/admin/header.php';
 </section>
 
 <script>
-function displayImage(e, display) {
-  if (e.files[0]) {
-    var reader = new FileReader();
+  function displayImage(e, display) {
+    if (e.files[0]) {
+      var reader = new FileReader();
 
-    reader.onload = function(e) {
-      document.querySelector(display).setAttribute('src', e.target.result);
+      reader.onload = function(e) {
+        document.querySelector(display).setAttribute('src', e.target.result);
+      }
+      reader.readAsDataURL(e.files[0]);
     }
-    reader.readAsDataURL(e.files[0]);
   }
-}
 
-document.querySelector('#start_class').addEventListener('click', function() {
-  this.style.display = 'none';
-  document.querySelector('#end_class').classList.remove('hidden');
-})
+  document.querySelector('#start_class').addEventListener('click', function() {
+    this.style.display = 'none';
+    document.querySelector('#end_class').classList.remove('hidden');
+  })
 </script>
 
 <?php ob_flush(); ?>
