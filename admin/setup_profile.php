@@ -1,8 +1,9 @@
 <?php
 ob_start();
-require_once '../core.php';
-require_once '../app/includes/admin/header.php';
-require_once  '../app/middlewares/Auth.php';
+include '../core.php';
+include '../path.php';
+include '../app/includes/admin/header.php';
+include  '../app/middlewares/Auth.php';
 
 
 
@@ -17,7 +18,8 @@ $departments = $activeDepartment->index();
 
 $email = '';
 if (isset($_POST['create'])) {
-    print_r($_POST);
+
+    $adminUser->setUpProfile($_POST, $_FILES);
 }
 
 

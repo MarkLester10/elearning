@@ -35,7 +35,13 @@
 <script src="../assets/js/bootstrap-select.min.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
 
+<script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
+<script>
+    $(document).ready(function() {
+        $('#resultTbl').DataTable();
+    });
+</script>
 
 </body>
 

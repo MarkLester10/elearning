@@ -19,7 +19,7 @@ $subjects = $activeSubject->index();
         <div class="card-body">
             <div class="table-responsive">
                 <?php if ($subjects) : ?>
-                    <table class="table">
+                    <table class="table" id="resultTbl">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>

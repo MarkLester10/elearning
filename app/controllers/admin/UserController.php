@@ -261,4 +261,44 @@ class AdminUser extends Connection
             return ['is_admin' => 0, 'is_product_manager' => 0, 'id' => $id,];
         }
     }
+
+    public function setUpProfile($data, $file)
+    {
+        $newImageName =  time() . '_' . $_FILES['image']['name'];
+        $tmpName = $_FILES['image']['tmp_name'];
+        $targetDirectory = ROOT_PATH . "/assets/imgs/profiles/" .  $newImageName;
+        if (move_uploaded_file($tmpName, $targetDirectory)) {
+            $user = $this->getUser($_SESSION['id']);
+
+            // $image = time() . "_" . $_FILES['image']['name'];
+            $sql = "UPDATE users set image=:image, department_id=:department_id, mobile_no=:mobile_no,
+            b_day=:bday,job=:job, degree=:degree WHERE id=:id";
+            $stmt = $this->conn->prepare($sql);
+            $run = $stmt->execute([
+                'image' => $newImageName,
+                'department_id' => $this->data['department_id'],
+                'mobile_no' => $this->data['mobile_no'],
+                'bday' => $this->data['b_day'],
+                'job' => $this->data['job'],
+                'degree' => $this->data['degree'],
+                'id' => $user->id,
+            ]);
+            if ($run) {
+                message('success', 'Your profile information has been updated');
+                redirect('faculty_dashboard.php');
+            }
+        }
+    }
+
+
+    // private function moveFile()
+    // {
+    //     if (!empty($_FILES['image']['name'])) {
+    //         $imageName = time() . "_" . $_FILES['image']['name'];
+    //         $tmpDestination = $_FILES['image']['tmp_name'];
+    //         $imageDestination = BASE . "/assets/imgs/profiles/" . $imageName;
+    //         $result = move_uploaded_file($tmpDestination, $imageDestination);
+    //         echo $result;
+    //     }
+    // }
 }

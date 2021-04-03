@@ -24,7 +24,7 @@ $users = $adminUser->index();
         <div class="card-body">
             <div class="table-responsive">
                 <?php if ($users) : ?>
-                    <table class="table">
+                    <table class="table" id="resultTbl">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>

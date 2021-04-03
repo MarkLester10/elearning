@@ -23,6 +23,7 @@ $subjects = $activeSubject->index();
     <div class="container mx-auto bg-white shadow-lg border-2 border-gray-400 mt-12 rounded-md">
       <!-- profile -->
       <div class="container mx-auto relative -top-16">
+
         <div class="flex items-center justify-center flex-col">
           <div class="bg-white h-32 p-2 w-32 rounded-full">
             <img src="../assets/imgs/faculty/placeholder.png" class="h-full w-full object-cover rounded-full ring" alt="">
@@ -33,7 +34,7 @@ $subjects = $activeSubject->index();
             <h2 class="uppercase">Faculty</h2>
           </div>
         </div>
-
+        <?php include '../app/includes/message.php' ?>
         <!-- breadcrumbs -->
         <nav aria-label="breadcrumb" class="mt-6">
           <ol class="breadcrumb">
@@ -64,6 +65,9 @@ $subjects = $activeSubject->index();
               </select>
             </div>
             <div class="form-group w-full">
+              <input type="text" name="google_meet_link" class="form-control" placeholder="Enter Google Meet Link">
+            </div>
+            <div class="form-group w-full">
               <button class="btn btn-danger"><i class="fa fa-plus"></i></button>
             </div>
           </div>
@@ -71,7 +75,7 @@ $subjects = $activeSubject->index();
 
         <!-- Table -->
         <div class="table-responsive">
-          <table class="table  bg-white">
+          <table class="table bg-white" id="resultTbl">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">ROOM ID</th>
