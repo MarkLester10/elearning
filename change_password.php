@@ -1,18 +1,16 @@
 <?php
 include 'path.php';
 require_once  'core.php';
-require_once 'app/middlewares/Guess.php';
 
-
-$email = $password1 = '';
-if (isset($_POST['login'])) {
+// if (!isset($_GET['token'])) {
+//     redirect('login.php');
+if (isset($_POST['change_pass'])) {
     // instantiate user validator
     $user = new UserController($_POST);
-    $errors = $user->validateLogin();
+    $errors = $user->validateForgotPass();
     //get the data
     $data = $user->getData();
-    $email = sanitize($data['email']);
-    $password1 = sanitize($data['password1']);
+    // $password1 = sanitize($data['password1']);
 }
 
 ?>
@@ -44,30 +42,13 @@ if (isset($_POST['login'])) {
             <div class="row">
                 <div class="col-md-5 mx-auto shadow p-3 bg-white register">
                     <?php include 'app/includes/message.php' ?>
-                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                    <form action="<?php echo $_SERVER['PHP_SELF'] . '?token=' . $_GET['token'] ?>" method="POST">
+                        <input type="hidden" name="token" value="<?php echo $_GET['token'] ?? '' ?>">
                         <div class="mx-auto shadow-md p-4">
                             <img src="./assets/imgs/logo.png" class="w-8/12 mx-auto" alt="">
                         </div>
-                        <!--email-->
-                        <div class="form-group mt-4">
-                            <div class="flex items-center gap-2">
-                                <i class="fas fa-user text-xl"></i>
-                                <input type="text" name="email" id="email" class="form-control
-                        <?php
-                        if (!empty(($email))) {
-                            echo $errors['email'] ? 'is-invalid' : 'is-valid';
-                        } else {
-                            if ($errors['email']) {
-                                echo 'is-invalid';
-                            }
-                        }
-                        ?>
-                    " placeholder="Enter your email" value="<?php echo $email ?>">
-                            </div>
-                            <div class="text-danger">
-                                <small><?php echo $errors['email'] ?? '' ?></small>
-                            </div>
-                        </div>
+
+
                         <!--password1-->
                         <div class="form-group mt-2">
                             <div class="flex items-center gap-2">
@@ -82,14 +63,33 @@ if (isset($_POST['login'])) {
                         }
                     }
                     ?>
-                    " placeholder="Enter your password">
+                    " placeholder="Enter your password" required>
                             </div>
                             <div class="text-danger">
                                 <small><?php echo $errors['password1'] ?? '' ?></small>
                             </div>
                         </div>
+                        <div class="form-group mt-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-lock text-xl"></i>
+                                <input type="password" name="password2" id="password2" class="form-control
+                    <?php
+                    if (!empty($password2)) {
+                        echo $errors['password2'] ? 'is-invalid' : '';
+                    } else {
+                        if ($errors['password2']) {
+                            echo 'is-invalid';
+                        }
+                    }
+                    ?>
+                    " placeholder="Confirm password" required>
+                            </div>
+                            <div class="text-danger">
+                                <small><?php echo $errors['password2'] ?? '' ?></small>
+                            </div>
+                        </div>
                         <div class="d-grid mt-2">
-                            <button class="btn btn-primary btn-block" name="login">Login</button>
+                            <button class="btn btn-primary btn-block" name="change_pass">Change Password</button>
                         </div>
                     </form>
                 </div>

@@ -48,6 +48,46 @@ class UserController extends Connection
         return $this->errors;
     }
 
+    public function validateForgotPass()
+    {
+        if ($this->data['password1'] != $this->data['password2']) {
+            $this->addError('password1', 'Passwords do not match. Please try again');
+            $this->addError('password2', 'Passwords do not match. Please try again');
+            return $this->errors;
+        }
+
+        if (!array_filter($this->errors)) {
+            $this->updatePass();
+        }
+    }
+    private function updatePass()
+    {
+        $sql = "SELECT * FROM users WHERE token=:token LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $run = $stmt->execute(['token' => $this->data['token']]);
+        $user = $stmt->fetch();
+        // print_r($user);
+        if ($user) {
+            // if existing
+            $password = $this->data['password1'];
+            echo $password;
+            $sql = "UPDATE users set password=:password WHERE id=:id";
+            $stmt = $this->conn->prepare($sql);
+            $run = $stmt->execute([
+                'password' => $this->data['password1'],
+                'id' => $user->id,
+            ]);
+            if ($run) {
+                echo 'password updated';
+                message('success', 'You have successfuly added password to your account');
+                $_SESSION['id'] = $user->id;
+                redirect('admin/setup_profile.php?id=' . $user->id);
+            } else {
+                'failed';
+            }
+        }
+    }
+
     //get data
     public function getData()
     {
@@ -189,52 +229,9 @@ class UserController extends Connection
         }
     }
 
-    // send_verfication email
-
-    private function send_mail($email, $token, $id)
-    {
-        // Load Composer's autoloader
-        require 'vendor/autoload.php';
-        // Instantiation and passing `true` enables exceptions
-        $mail = new PHPMailer();
-        try {
-            $serverName = $_SERVER['SERVER_NAME'];
-            $currentUrl = $serverName . '/online-booking-system';
-            //Server settings
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
-            $mail->isSMTP();                                            // Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
-            $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
-            $mail->Username   = EMAIL;                     // SMTP username
-            $mail->Password   = PASS;                               // SMTP password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
-            $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
-
-            //Recipients
-            $mail->setFrom('coffeeroyale@gmail.com', 'Coffee Royale');
-            $mail->addAddress($email);     // Add a recipient
 
 
-            // Content
-            $mail->isHTML(true);                                  // Set email format to HTML
-            $mail->Subject = 'Email Verification';
-            $mail->Body    = "
-                <h2> Your Activation Code</h2>
-                <h3> $token </h3>
-                <h1>OR</h1>
-                <h3><a href='$currentUrl/activation.php?active=$token&id=$id'>$currentUrl/activation.php?active=$token&id=$id </a></h3>
-            ";
-            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
-            $mail->send();
-            $_SESSION['id'] = $id;
-            message('success', 'An account verification code has been sent to your email');
-            $_SESSION['token'] = $token;
-            redirect('activation.php');
-        } catch (Exception $e) {
-            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-        }
-    }
 
 
     // activate user if email is verified
@@ -266,8 +263,8 @@ class UserController extends Connection
     private function login()
     {
         // hash the password first
-        $password = md5($this->data['password1']);
-        // $password = $this->data['password1'];
+        // $password = md5($this->data['password1']);
+        $password = $this->data['password1'];
 
         $email = $this->data['email'];
         // check if valid credentials
@@ -280,15 +277,24 @@ class UserController extends Connection
             $this->addError('email', 'Invalid Credentials. An email or password is incorrect. Please try again');
             $this->addError('password1', 'Invalid Credentials. An email or password is incorrect. Please try again');
         } else {
-            $_SESSION['id'] = $user->id;
-            $_SESSION['position_id'] = $user->position_id;
-            if ($user->position_id == 1) {
-                redirect('admin/dashboard.php');
-            } elseif ($user->position_id == 2) {
-                redirect('admin/faculty_dashboard.php');
-            } elseif ($user->position_id == 3) {
-                redirect('admin/monitoring_dashboard.php');
+            if ($user->password === 'secret123') {
+                echo 'secretsjdskafja';
+            } else {
+                $_SESSION['id'] = $user->id;
+                $_SESSION['position_id'] = $user->position_id;
+                if ($user->position_id == 1) {
+                    redirect('admin/dashboard.php');
+                } elseif ($user->position_id == 2) {
+                    redirect('admin/faculty_dashboard.php');
+                } elseif ($user->position_id == 3) {
+                    redirect('admin/monitoring_dashboard.php');
+                }
             }
         }
+    }
+
+    public function changePassword($data, $token)
+    {
+        $this->data = $data;
     }
 }

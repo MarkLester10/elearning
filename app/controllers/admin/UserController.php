@@ -1,9 +1,16 @@
 <?php
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+
+
 class AdminUser extends Connection
 {
     private $data;
     private $errors = [];
-    private static $fields = ['firstname', 'lastname', 'email', 'password1', 'password2'];
+    private static $fields = ['firstname', 'lastname', 'email', 'position_id'];
     public function __construct()
     {
         parent::__construct();
@@ -12,6 +19,13 @@ class AdminUser extends Connection
     public function index()
     {
         $sql = "SELECT * FROM users";
+        $stmt = $this->conn->query($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    public function getPositions()
+    {
+        $sql = "SELECT * FROM positions";
         $stmt = $this->conn->query($sql);
         $stmt->execute();
         return $stmt->fetchAll();
@@ -46,17 +60,8 @@ class AdminUser extends Connection
     // Validate category name
     public function validate()
     {
-        foreach (self::$fields as $field) {
-            if (!array_key_exists($field, $this->data)) {
-                trigger_error("$field must not be empty");
-                return;
-            }
-
-            $this->validateFirstname();
-            $this->validateLastname();
-            $this->validateEmail();
-            return $this->errors;
-        }
+        $this->validateEmail();
+        return $this->errors;
     }
 
     // validate firstname
@@ -94,16 +99,10 @@ class AdminUser extends Connection
     {
         //trim white space
         $val = trim($this->data['email']);
-        // check if empty
-        if (empty($val)) {
-            $this->addError('email', 'Email must not be empty');
-        } else {
-            if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
-                $this->addError('email', 'Email must be a valid email');
-            }
+        if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
+            $this->addError('email', 'Email must be a valid email');
         }
     }
-
 
     //add error
 
@@ -115,9 +114,9 @@ class AdminUser extends Connection
     //Check if no more errors then insert data
     private function checkIfHasError()
     {
-        if (!array_filter($this->errors)) {
-            $name = $this->data['name'];
-            $slug = slugify($name);
+        if (empty($this->errors)) {
+
+
             // check if email already exists
             $sql = "SELECT * FROM users WHERE email=:email LIMIT 1";
             $stmt = $this->conn->prepare($sql);
@@ -126,28 +125,82 @@ class AdminUser extends Connection
             // if email already registered
             if ($stmt->rowCount()) {
                 $this->errors['email'] = 'Email already exists. Please try a new one';
-            } else {
+            }
+            if (empty($this->errors)) {
+                $firstname = $this->data['firstname'];
+                $lastname = $this->data['lastname'];
+                $email = $this->data['email'];
+                $position_id = intval($this->data['position_id']);
+                $password = 'secret123';
                 $token = bin2hex(random_bytes(7));
-                // register user using named params
-                $sql = "INSERT INTO users (firstname, lastname, email, password, token, active) VALUES (:firstname, :lastname, :email, :password, :token, 1)";
-                $stmt = $this->conn->prepare($sql);
-                // hash the password before saving to the database
-                $password = md5($this->data['password1']);
 
-                // bind param and execute
-                $run = $stmt->execute([
-                    'firstname' => $this->data['firstname'],
-                    'lastname' => $this->data['lastname'],
-                    'email' => $this->data['email'],
-                    'password' => $password,
-                    'token' => $token,
-                ]);
+
+                // register user using named params
+                $sql = "INSERT INTO users (firstname, lastname, email, password, position_id, token)
+                VALUES (:firstname, :lastname, :email, :password, :position_id, :token)";
+
+                $stmt = $this->conn->prepare($sql);
+
+                $stmt->bindValue(':firstname', $firstname);
+                $stmt->bindValue(':lastname', $lastname);
+                $stmt->bindValue(':email', $email);
+                $stmt->bindValue(':password', $password);
+                $stmt->bindValue(':position_id', $position_id);
+                $stmt->bindValue(':token', $token);
+                $run = $stmt->execute();
+
+
                 $lastId = $this->conn->lastInsertId();
                 if ($run) {
+                    $user = $this->getUser($lastId);
+                    // send mail
+                    $this->send_mail($user, $user->token);
                     message('success', 'A new user has been created');
                     redirect('admin_users.php');
+                } else {
+                    echo 'error occured';
                 }
             }
+        }
+    }
+
+    private function send_mail($user, $token)
+    {
+        // Instantiation and passing `true` enables exceptions
+        require '../mail/Exception.php';
+        require '../mail/PHPMailer.php';
+        require '../mail/SMTP.php';
+
+        try {
+            $mail = new PHPMailer();
+            //Server settings
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+            $mail->isSMTP();                                            // Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+            $mail->Username   = EMAIL;                     // SMTP username
+            $mail->Password   = PASS;                               // SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+            $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+            //Recipients
+            $mail->setFrom('elearning@gmail.com', 'TCU - Monitoring System');
+            $mail->addAddress($user->email);     // Add a recipient
+
+
+            // Content
+            $mail->isHTML(true);                                  // Set email format to HTML
+            $mail->Subject = 'Account Creation';
+            $mail->Body    = sendMail($user, $token);
+            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+            $sent = $mail->send();
+            if ($sent) {
+                message('success', 'A user has been created');
+                redirect('admin_users.php');
+            }
+        } catch (Exception $e) {
+            echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         }
     }
 

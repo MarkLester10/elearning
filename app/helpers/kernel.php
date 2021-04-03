@@ -5,3 +5,4 @@ require_once('message.php');
 require_once('slugify.php');
 require_once('showPrice.php');
 require_once('formatDate.php');
+require_once('email_helper.php');
