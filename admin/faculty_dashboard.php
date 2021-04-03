@@ -49,6 +49,9 @@ require_once  '../app/includes/admin/header.php';
               </select>
             </div>
             <div class="form-group w-full">
+              <input type="text" name="google_meet_link" class="form-control" placeholder="Enter Google Meet Link">
+            </div>
+            <div class="form-group w-full">
               <button class="btn btn-danger"><i class="fa fa-plus"></i></button>
             </div>
           </div>
@@ -56,7 +59,7 @@ require_once  '../app/includes/admin/header.php';
 
         <!-- Table -->
         <div class="table-responsive">
-          <table class="table  bg-white">
+          <table class="table  bg-white" id="resultTbl">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">ROOM ID</th>
@@ -69,7 +72,7 @@ require_once  '../app/includes/admin/header.php';
               <tr>
                 <th scope="row">#12343</th>
                 <td>
-                  <a href="#" class="hover:underline text-red-400">Lorem ipsum dolor sit amet.</a>
+                  <a href="class.php" class="hover:underline text-red-400">Lorem ipsum dolor sit amet.</a>
                 </td>
                 <td>Mark</td>
                 <td>
@@ -88,5 +91,5 @@ require_once  '../app/includes/admin/header.php';
   </div>
 </section>
 
-
+<?php require_once '../app/includes/admin/footer.php' ?>
 <?php ob_flush(); ?>
