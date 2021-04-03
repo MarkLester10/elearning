@@ -267,6 +267,8 @@ class UserController extends Connection
     {
         // hash the password first
         $password = md5($this->data['password1']);
+        // $password = $this->data['password1'];
+
         $email = $this->data['email'];
         // check if valid credentials
         $sql = "SELECT * FROM users WHERE email=:email AND password=:password";
@@ -279,10 +281,13 @@ class UserController extends Connection
             $this->addError('password1', 'Invalid Credentials. An email or password is incorrect. Please try again');
         } else {
             $_SESSION['id'] = $user->id;
-            if ($user->is_admin === 1) {
+            $_SESSION['position_id'] = $user->position_id;
+            if ($user->position_id == 1) {
                 redirect('admin/dashboard.php');
-            } else {
-                redirect('index.php');
+            } elseif ($user->position_id == 2) {
+                redirect('admin/faculty_dashboard.php');
+            } elseif ($user->position_id == 3) {
+                redirect('admin/monitoring_dashboard.php');
             }
         }
     }

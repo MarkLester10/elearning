@@ -4,7 +4,7 @@ require('app/config/Config.php');
 require('app/helpers/kernel.php');
 require_once('app/controllers/Controllers.php');
 require_once('app/models/User.php');
-require_once('app/middlewares/Middlewares.php');
+
 
 
 

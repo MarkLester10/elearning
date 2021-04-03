@@ -41,7 +41,22 @@ class User extends Connection
     {
         if (self::Auth()) {
             $user = $this->getUser();
-            return $user->is_admin;
+            return $user->position_id == 1;
+        }
+    }
+
+    public function isFaculty()
+    {
+        if (self::Auth()) {
+            $user = $this->getUser();
+            return $user->position_id == 2;
+        }
+    }
+    public function isMonitoringStaff()
+    {
+        if (self::Auth()) {
+            $user = $this->getUser();
+            return $user->position_id == 3;
         }
     }
 }

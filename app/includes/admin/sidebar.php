@@ -15,7 +15,7 @@
             <li class="nav-item menu-open
                 <?php echo (strpos(CURRENT_URL, 'dashboard') !== false) ? 'active' : '' ?>
                 ">
-                <a href="<?php echo BASE_URL . '/admin/dashboard.php' ?>" class="nav-link">
+                <a href="<?php echo 'dashboard.php' ?>" class="nav-link">
                     <i class="nav-icon fas fa-tachometer-alt"></i>
                     <p>
                         Dashboard
@@ -25,7 +25,7 @@
             <li class="nav-item menu-open
             <?php echo (strpos(CURRENT_URL, 'admin_user') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo BASE_URL . 'admin/admin_users.php' ?>" class="nav-link">
+                <a href="<?php echo 'admin_users.php' ?>" class="nav-link">
                     <i class="nav-icon fas fa-users"></i>
                     <p>
                         Users
@@ -35,7 +35,7 @@
             <li class="nav-item menu-open
             <?php echo (strpos(CURRENT_URL, 'subject') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo BASE_URL . 'admin/subjects.php' ?>" class="nav-link ">
+                <a href="<?php echo 'subjects.php' ?>" class="nav-link ">
                     <i class="nav-icon fa fa-list-alt"></i>
                     <p>
                         Subjects
@@ -46,53 +46,38 @@
             <li class="nav-item menu-open
             <?php echo (strpos(CURRENT_URL, 'department') !== false) ? 'active' : '' ?>
             ">
-                <a href="<?php echo BASE_URL . 'admin/departments.php' ?>" class="nav-link">
+                <a href="<?php echo  'departments.php' ?>" class="nav-link">
                     <i class="nav-icon far fa-building"></i>
                     <p>
                         Departments
                     </p>
                 </a>
             </li>
-            <li class="nav-item menu-open
-            <?php echo (strpos(CURRENT_URL, 'deposit') !== false) ? 'active' : '' ?>
-            ">
-                <a href="<?php echo BASE_URL . 'admin/fixed_deposits.php' ?>" class="nav-link">
-                    <i class="nav-icon fas fa-hand-holding-usd"></i>
+
+
+            <li class="nav-item menu-open">
+                <a href="#" class=" nav-link ">
+                    <i class="nav-icon fas fa-plus-square"></i>
                     <p>
-                        Fixed Deposits
-                    </p>
-                </a>
-            </li>
-            <li class="nav-item menu-open
-            <?php echo (strpos(CURRENT_URL, 'saving') !== false) ? 'active' : '' ?>
-            ">
-                <a href="<?php echo BASE_URL . 'admin/savings.php' ?>" class="nav-link">
-                    <i class="nav-icon fas fa-piggy-bank"></i>
-                    <p>
-                        Savings
+                        Add Room
                     </p>
                 </a>
             </li>
 
-
-            <li class="nav-item menu-open
-            <?php echo (strpos(CURRENT_URL, 'admin/loan') !== false) ? 'active' : '' ?>
-            ">
-                <a href="<?php echo BASE_URL . 'admin/loans.php' ?>" class=" nav-link ">
-                    <i class="nav-icon fas fa-money-check"></i>
+            <li class="nav-item menu-open">
+                <a href="#" class=" nav-link ">
+                    <i class="nav-icon fab fa-google"></i>
                     <p>
-                        Loans
+                        Add Google Meet Link
                     </p>
                 </a>
             </li>
 
-            <li class="nav-item menu-open
-            <?php echo (strpos(CURRENT_URL, 'payment') !== false) ? 'active' : '' ?>
-            ">
-                <a href="<?php echo BASE_URL . 'admin/payments.php' ?>" class=" nav-link ">
-                    <i class="nav-icon fas fa-credit-card"></i>
+            <li class="nav-item menu-open">
+                <a href="#" class=" nav-link ">
+                    <i class="nav-icon fas fa-user-tie"></i>
                     <p>
-                        Payments
+                        Monitoring Staff
                     </p>
                 </a>
             </li>

@@ -2,7 +2,8 @@
 if (isset($_POST['logout'])) {
     session_destroy();
     unset($_SESSION['id']);
-    redirect('../login.php');
+    unset($_SESSION['position_id']);
+    redirect(BASE_URL . 'login.php');
 }
 ?>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">

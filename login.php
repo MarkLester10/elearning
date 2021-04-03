@@ -1,6 +1,7 @@
 <?php
 include 'path.php';
 require_once  'core.php';
+require_once 'app/middlewares/Guess.php';
 
 
 $email = $password1 = '';
@@ -10,9 +11,9 @@ if (isset($_POST['login'])) {
     $errors = $user->validateLogin();
     //get the data
     $data = $user->getData();
-
     $email = sanitize($data['email']);
     $password1 = sanitize($data['password1']);
+    echo md5($password1);
 }
 
 ?>
@@ -27,6 +28,7 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
     <!--bootstrap-->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <!--custom css -->
     <!--flatpckr -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
@@ -35,18 +37,23 @@ if (isset($_POST['login'])) {
     <link rel="stylesheet" href="assets/css/sub-main.css"> -->
 </head>
 
-<body style="background: #3f240d">
+<body style="background-image: url('assets/imgs/bg-image.jpg'); background-size: cover; background-position: top center;">
 
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-5 mx-auto shadow p-3 bg-white register">
-                <?php include 'app/includes/message.php' ?>
-                <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
-                    <h4 class="text-center pb-3 border-bottom mb-3 login-text">Login Now!</h4>
-                    <!--email-->
-                    <div class="form-group mt-2">
-                        <input type="text" name="email" id="email" class="form-control
+    <div class="h-screen flex items-center">
+        <div class="container m-16">
+            <div class="row">
+                <div class="col-md-5 mx-auto shadow p-3 bg-white register">
+                    <?php include 'app/includes/message.php' ?>
+                    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+                        <div class="mx-auto shadow-md p-4">
+                            <img src="./assets/imgs/logo.png" class="w-8/12 mx-auto" alt="">
+                        </div>
+                        <!--email-->
+                        <div class="form-group mt-4">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-user text-xl"></i>
+                                <input type="text" name="email" id="email" class="form-control
                         <?php
                         if (!empty(($email))) {
                             echo $errors['email'] ? 'is-invalid' : 'is-valid';
@@ -56,14 +63,17 @@ if (isset($_POST['login'])) {
                             }
                         }
                         ?>
-                    " placeholder="Enter email*" value="<?php echo $email ?>">
-                        <div class="text-danger">
-                            <small><?php echo $errors['email'] ?? '' ?></small>
+                    " placeholder="Enter your email" value="<?php echo $email ?>">
+                            </div>
+                            <div class="text-danger">
+                                <small><?php echo $errors['email'] ?? '' ?></small>
+                            </div>
                         </div>
-                    </div>
-                    <!--password1-->
-                    <div class="form-group mt-2">
-                        <input type="password" name="password1" id="password1" class="form-control
+                        <!--password1-->
+                        <div class="form-group mt-2">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-lock text-xl"></i>
+                                <input type="password" name="password1" id="password1" class="form-control
                     <?php
                     if (!empty($password1)) {
                         echo $errors['password1'] ? 'is-invalid' : '';
@@ -73,18 +83,17 @@ if (isset($_POST['login'])) {
                         }
                     }
                     ?>
-                    " placeholder="Enter password*">
-                        <div class="text-danger">
-                            <small><?php echo $errors['password1'] ?? '' ?></small>
+                    " placeholder="Enter your password">
+                            </div>
+                            <div class="text-danger">
+                                <small><?php echo $errors['password1'] ?? '' ?></small>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <span>Not yet a user? <a href="register.php">Register here</a></span>
-                    </div>
-                    <div class="d-grid mt-2">
-                        <button class="btn btn-primary btn-block" name="login">Login</button>
-                    </div>
-                </form>
+                        <div class="d-grid mt-2">
+                            <button class="btn btn-primary btn-block" name="login">Login</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
