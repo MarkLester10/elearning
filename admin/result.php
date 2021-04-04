@@ -3,6 +3,15 @@ ob_start();
 require_once '../core.php';
 require_once '../path.php';
 require_once  '../app/includes/admin/header.php';
+
+
+
+
+
+$class = new Classes();
+$classes = $class->getResults();
+
+$activeUser = $class->getUser($_SESSION['id']);
 ?>
 
 <!-- Main content -->
@@ -15,10 +24,15 @@ require_once  '../app/includes/admin/header.php';
       <div class="container mx-auto relative -top-16">
         <div class="flex items-center justify-center flex-col">
           <div class="bg-white h-32 p-2 w-32 rounded-full">
-            <img src="../assets/imgs/faculty/placeholder.png" class="h-full w-full object-cover rounded-full ring" alt="">
+            <?php if ($activeUser->image) : ?>
+              <img src="../assets/imgs/profiles/<?php echo $activeUser->image ?>" class="h-full w-full object-cover rounded-full ring" alt="">
+            <?php else : ?>
+              <img src="https://ui-avatars.com/api/?name=<?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?>" class="h-full w-full object-cover rounded-full ring" alt="profile">
+            <?php endif ?>
+
           </div>
           <div class="mt-4 text-center">
-            <h1 class="text-lg font-bold">John Doe</h1>
+            <h1 class="text-lg font-bold"><?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?></h1>
             <hr class="block my-2">
             <h2 class="uppercase">Faculty</h2>
           </div>
@@ -48,70 +62,25 @@ require_once  '../app/includes/admin/header.php';
                 <th scope="col">DATE</th>
                 <th scope="col">START TIME</th>
                 <th scope="col">END TIME</th>
-                <th scope="col">RESULT</th>
+                <th scope="col">DURATION <br> (HRS:MINS:SECS) </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>Lorem ipsum dolor sit amet.</th>
-                <td>
-                  Lorem ipsum dolor sit.
-                </td>
-                <td>Mark</td>
-                <td>Lorem, ipsum.</td>
-                <td>July 10, 1776</td>
-                <td>Monday 4:30PM</td>
-                <td>Monday 5:00PM</td>
-                <td>30:00 Minutes</td>
-              </tr>
-              <tr>
-                <th>Lorem ipsum dolor sit amet.</th>
-                <td>
-                  Lorem ipsum dolor sit.
-                </td>
-                <td>Mark</td>
-                <td>Lorem, ipsum.</td>
-                <td>July 10, 1776</td>
-                <td>Monday 4:30PM</td>
-                <td>Monday 5:00PM</td>
-                <td>30:00 Minutes</td>
-              </tr>
-              <tr>
-                <th>Lorem ipsum dolor sit amet.</th>
-                <td>
-                  Lorem ipsum dolor sit.
-                </td>
-                <td>Mark</td>
-                <td>Lorem, ipsum.</td>
-                <td>July 10, 1776</td>
-                <td>Monday 4:30PM</td>
-                <td>Monday 5:00PM</td>
-                <td>30:00 Minutes</td>
-              </tr>
-              <tr>
-                <th>Lorem ipsum dolor sit amet.</th>
-                <td>
-                  Lorem ipsum dolor sit.
-                </td>
-                <td>test me</td>
-                <td>Lorem, ipsum.</td>
-                <td>July 10, 1776</td>
-                <td>Monday 4:30PM</td>
-                <td>Monday 5:00PM</td>
-                <td>30:00 Minutes</td>
-              </tr>
-              <tr>
-                <th>Lorem ipsum dolor sit amet.</th>
-                <td>
-                  Lorem ipsum dolor sit.
-                </td>
-                <td>Mark</td>
-                <td>Lorem, ipsum.</td>
-                <td>July 10, 1776</td>
-                <td>Monday 4:30PM</td>
-                <td>Monday 5:00PM</td>
-                <td>30:00 Minutes</td>
-              </tr>
+              <?php foreach ($classes as $singleClass) : ?>
+                <tr>
+                  <th><?php echo $class->getDepartment($singleClass->department_id)->name ?></th>
+                  <?php $staff = $class->getUser($singleClass->monitoring_id) ?>
+                  <td><?php echo (!empty($staff)) ? ucfirst($staff->firstname) . ' ' . ucfirst($staff->lastname) : '<span class="text-danger">pending</span>' ?></td>
+                  <td><?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?></td>
+                  <td><?php echo $class->getSubject($singleClass->subject_schedule_id)->subject_name ?></td>
+                  <td><?php echo shortDate($singleClass->created_at) ?></td>
+                  <td><?php echo shortDate($singleClass->start_time); ?></td>
+                  <td><?php echo shortDate($singleClass->end_time); ?></td>
+                  <td><?php echo $singleClass->duration ?></td>
+
+                </tr>
+              <?php endforeach ?>
+
             </tbody>
           </table>
         </div>

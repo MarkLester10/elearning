@@ -45,7 +45,10 @@
 
 <script>
     $(document).ready(function() {
-        $('#resultTbl').DataTable();
+        $('#resultTbl').DataTable({
+            ordering: false
+        });
+
     });
 </script>
 

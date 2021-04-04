@@ -7,3 +7,4 @@ require_once('showPrice.php');
 require_once('formatDate.php');
 require_once('email_helper.php');
 require_once('image_helper.php');
+require_once('calculateDuration.php');

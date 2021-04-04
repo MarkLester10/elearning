@@ -50,6 +50,9 @@ $activeUser = $class->getUser($_SESSION['id']);
           </div>
         </div>
 
+        <!--message-->
+        <?php include '../app/includes/message.php' ?>
+
         <!-- breadcrumbs -->
         <nav aria-label="breadcrumb" class="mt-6">
           <ol class="breadcrumb">
@@ -76,8 +79,8 @@ $activeUser = $class->getUser($_SESSION['id']);
               <div class="form-group w-full">
                 <select class="form-control" name="subject_schedule_id" required>
                   <option value="">Select Subject/Schedule</option>
-                  <option v-for="subject in subjects.subjects" :key="subject.id" :value="subject.id">
-                    {{subject.subject_name}}
+                  <option v-for="subject in subjects" :key="subject.id" :value="subject.id">
+                    {{subject.subject_name}} - {{subject.schedule}}
                   </option>
                 </select>
               </div>
@@ -95,24 +98,40 @@ $activeUser = $class->getUser($_SESSION['id']);
         <div class="table-responsive">
           <table class="table bg-white" id="resultTbl">
             <thead class="thead-dark">
-              <tr>
+              <tr class="text-center align-items-center">
                 <th scope="col">ROOM ID</th>
                 <th scope="col">ROOM/DEPARTMENT/SUBJECT/TIME</th>
                 <th scope="col">MONITORING STAFF</th>
+                <th scope="col">MONITORING STATUS</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($classes as $key => $singleClass) : ?>
-                <tr>
-                  <th scope="row">TCU-MSU - <?php echo $key + 1 ?></th>
+                <tr class="text-center">
+                  <th scope="row" class="text-sm">TCU-MSU - <?php echo $singleClass->id ?></th>
                   <td>
                     <a href="class.php?id=<?php echo $singleClass->id ?>" class="hover:underline text-blue-400">
                       <?php echo $singleClass->scheduled_class ?>
                     </a>
                   </td>
                   <?php $staff = $class->getUser($singleClass->monitoring_id) ?>
-                  <td><?php echo (!empty($staff)) ? ucfirst($staff->firstname) . ' ' . ucfirst($staff->lastname) : '<span class="text-danger">not monitored</span>' ?></td>
+                  <td><?php echo (!empty($staff)) ? ucfirst($staff->firstname) . ' ' . ucfirst($staff->lastname) : '<span class="text-danger">pending</span>' ?></td>
+
+                  <td class="d-flex justify-content-center">
+                    <?php if (!is_null($singleClass->start_time) && is_null($singleClass->end_time)) : ?>
+                      <div class="w-4 h-4 rounded-full bg-red-400 relative">
+                        <div class="absolute inset-0 w-full h-full animate-ping bg-red-500 rounded-full">
+                        </div>
+                      </div>
+                    <?php elseif (!is_null($singleClass->start_time) && !is_null($singleClass->end_time)) : ?>
+                      <span class="text-green-500">Recorded</span>
+                    <?php else : ?>
+                      <span class="text-muted">not monitored</span>
+                    <?php endif; ?>
+
+                  </td>
+
                   <td>
 
                     <a href="<?php echo $_SERVER['PHP_SELF'] ?>?delete_id=<?php echo $singleClass->id ?>" class="text-danger" onclick="return confirm('Are you sure you want to delete this class?');">

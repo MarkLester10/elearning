@@ -60,7 +60,7 @@
                 <li class="nav-item menu-open
                 <?php echo (strpos(CURRENT_URL, 'faculty_dashboard') !== false) ? 'active' : '' ?>
                 ">
-                    <a href="<?php echo 'faculty_dashboard.php' ?>" class="nav-link">
+                    <a href="faculty_dashboard.php" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard

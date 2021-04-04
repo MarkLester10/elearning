@@ -81,7 +81,9 @@ class Subject extends Connection
                 'schedule' => $schedule,
             ]);
             if ($run) {
-                message('success', 'A new subject has been created');
+                // message('success', 'A new subject has been created');
+                $_SESSION['type'] = 'success';
+                $_SESSION['message'] = 'A new subject has been created';
                 redirect('subjects.php');
             }
         }

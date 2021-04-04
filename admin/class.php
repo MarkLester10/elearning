@@ -9,8 +9,24 @@ $activeUser = $class->getUser($_SESSION['id']);
 if (!isset($_GET['id'])) {
   redirect('faculty_dashboard.php');
 }
+
+if (isset($_POST['send_to_monitoring'])) {
+  $class->updateClass($_POST, $_FILES);
+}
+
+if (isset($_POST['end_class'])) {
+  $class->updateEndClass($_POST);
+}
 $activeClass = $class->getClass($_GET['id']);
 
+$screenshot = '../assets/imgs/logo.png';
+
+is_null($activeClass->screen_shot) ? '../assets/imgs/logo.png'
+  : '../assets/imgs/screenshots/' . $activeClass->screen_shot;
+
+if (!is_null($activeClass->screen_shot)) {
+  $screenshot = '../assets/imgs/screenshots/' . $activeClass->screen_shot;
+}
 
 ?>
 
@@ -52,63 +68,93 @@ $activeClass = $class->getClass($_GET['id']);
 
 
         <!-- Recordings -->
-        <div class="bg-gray-800 text-white p-4 rounded-md flex flex-col md:flex-row items-center justify-between">
-          <h1>Your class session has been started</h1>
-          <div class="flex items-center justify-center space-x-4">
-            <small>Time is running</small>
-            <div class="w-6 h-6 rounded-full bg-red-400 relative">
-              <div class="absolute inset-0 w-full h-full animate-ping bg-red-500 rounded-full">
+        <?php if (!is_null($activeClass->start_time) && is_null($activeClass->end_time)) : ?>
+          <div class="bg-gray-800 text-white p-4 rounded-md flex flex-col md:flex-row items-center justify-between">
+            <h1>Your class session has been started</h1>
+            <div class="flex items-center justify-center space-x-4">
+              <small>Time is running</small>
+              <div class="w-6 h-6 rounded-full bg-red-400 relative">
+                <div class="absolute inset-0 w-full h-full animate-ping bg-red-500 rounded-full">
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        <?php endif; ?>
 
         <div class="row  p-2 md:p-4">
           <div class="col-lg-8 p-4">
             <h1 class="font-bold uppercase text-2xl text-center"><?php echo $activeClass->scheduled_class ?>
             </h1>
 
-            <form action="#" class="mt-12">
+            <!-- Form -->
+            <form action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id'] ?>" class="mt-12" enctype="multipart/form-data" method="POST">
               <div class="form-group">
                 <div class="flex items-center justify-center border border-red-300 p-6">
-                  <img src="../assets/imgs/logo.png" alt="#" class="w-32" id="screenshotPreview">
+                  <img src="<?php echo $screenshot ?>" alt="#" class="w-32" id="screenshotPreview">
                 </div>
               </div>
+              <?php if (is_null($activeClass->screen_shot)) : ?>
+                <div class="form-group">
+                  <label for="#">Class Screen Shot</label>
+                  <input class="form-control" type="file" name="screen_shot" onchange="displayImage(this, '#screenshotPreview')">
+                </div>
+              <?php endif; ?>
 
               <div class="form-group">
-                <label for="#">Class Screen Shot</label>
-                <input class="form-control" type="file" name="screen_shot" onchange="displayImage(this, '#screenshotPreview')">
-              </div>
+                <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                <?php if (!$activeClass->is_sent_to_monitoring) : ?>
+                  <button type="submit" class="btn btn-danger btn-md" name="send_to_monitoring">Send to Monitoring</button>
 
-              <div class="form-group">
-                <button type="submit" class="btn btn-danger btn-md">Send to Monitoring</button>
-                <small id="passwordHelpBlock" class="form-text text-muted">
-                  Please Make sure to send your class to monitoring before lecturing, so our monitoring staff will save
-                  your records.
-                </small>
+                  <small id="passwordHelpBlock" class="form-text text-muted">
+                    Please Make sure to send your class to monitoring before lecturing, so our monitoring staff will save
+                    your records.
+                  </small>
+                <?php endif ?>
                 <br>
+
                 <a href="<?php echo $activeClass->google_meet_link ?>" class="btn btn-success btn-md mt-4" target="_blank" id="start_class">Go to Class</a>
-                <div class="hidden" id="end_class">
-                  <form action="#">
-                    <input type="hidden" name="is_class_started">
-                    <button type="submit" class="btn btn-danger btn-md mt-4">End Class</button>
-                  </form>
-                </div>
+
               </div>
             </form>
+
+            <?php if (is_null($activeClass->end_time)) : ?>
+              <div class="" id="end_class">
+                <form action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id'] ?>" method="POST">
+                  <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
+                  <button type="submit" name="end_class" class="btn btn-danger btn-md mt-4">End Class</button>
+                </form>
+              </div>
+            <?php endif ?>
+
+
           </div>
 
           <div class="col-lg-4 p-4 bg-gray-100 space-y-6">
 
-            <div class="flex items-center justify-between">
-              <div>
-                <i class="fa fa-clock"></i>
-                Class Session started at
+            <?php if (!is_null($activeClass->start_time)) : ?>
+              <div class="flex items-center justify-between">
+                <div>
+                  <i class="fa fa-clock"></i>
+                  Class Session started at
+                </div>
+                <span>
+                  <?php echo shortDate($activeClass->start_time) ?>
+                </span>
               </div>
-              <span>
-                2:51 PM
-              </span>
-            </div>
+
+            <?php endif; ?>
+
+            <?php if (!is_null($activeClass->end_time)) : ?>
+              <div class="flex items-center justify-between">
+                <div>
+                  <i class="fa fa-clock"></i>
+                  Class Session ended at
+                </div>
+                <span>
+                  <?php echo shortDate($activeClass->end_time) ?>
+                </span>
+              </div>
+            <?php endif; ?>
 
             <div class="flex items-center justify-between">
               <div class="space-x-4">
@@ -123,7 +169,10 @@ $activeClass = $class->getClass($_GET['id']);
                 <i class="fa fa-user-tie"></i>
                 Monitoring Staff
               </div>
-              <h1 class="font-bold text-red-400">John Doe</h1>
+              <h1 class="font-bold text-red-400">
+                <?php $staff = $class->getUser($activeClass->monitoring_id) ?>
+                <?php echo (!empty($staff)) ? ucfirst($staff->firstname) . ' ' . ucfirst($staff->lastname) : '<span class="text-danger">pending</span>' ?>
+              </h1>
             </div>
 
             <hr>
@@ -149,10 +198,10 @@ $activeClass = $class->getClass($_GET['id']);
     }
   }
 
-  document.querySelector('#start_class').addEventListener('click', function() {
-    this.style.display = 'none';
-    document.querySelector('#end_class').classList.remove('hidden');
-  })
+  // document.querySelector('#start_class').addEventListener('click', function() {
+  //   this.style.display = 'none';
+  //   document.querySelector('#end_class').classList.remove('hidden');
+  // })
 </script>
 
 <?php ob_flush(); ?>

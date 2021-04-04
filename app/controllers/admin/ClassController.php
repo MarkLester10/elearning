@@ -11,9 +11,17 @@ class Classes extends Connection
 
     public function index()
     {
-        $sql = "SELECT * FROM classes";
+        $id = $_SESSION['id'];
+        $sql = "SELECT * FROM classes WHERE user_id=$id ORDER BY id DESC";
         $stmt = $this->conn->query($sql);
         $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    public function getResults()
+    {
+        $id = $_SESSION['id'];
+        $sql = "SELECT * FROM classes WHERE end_time IS NOT NULL AND user_id = $id ORDER BY id DESC";
+        $stmt = $this->conn->query($sql);
         return $stmt->fetchAll();
     }
 
@@ -55,7 +63,7 @@ class Classes extends Connection
         $this->errors[$key] = $val;
     }
 
-    private function getSubject($id)
+    public function getSubject($id)
     {
         $sql = "SELECT * FROM subjects_schedule WHERE id=:id";
         $stmt = $this->conn->prepare($sql);
@@ -74,17 +82,33 @@ class Classes extends Connection
             $google_meet_link = $this->data['google_meet_link'];
             $user_id = $_SESSION['id'];
 
-            $sql = "INSERT INTO classes (scheduled_class, subject_schedule_id, google_meet_link, user_id )
-            VALUES (:scheduled_class, :subject_schedule_id, :google_meet_link, :user_id)";
+            // check if may existing scheduled class
+            $sql = "SELECT * FROM classes WHERE scheduled_class=:scheduled_class LIMIT 1";
             $stmt = $this->conn->prepare($sql);
-            $run = $stmt->execute([
-                'scheduled_class' => $scheduled_class,
-                'subject_schedule_id' => $subject_schedule_id,
-                'google_meet_link' => $google_meet_link,
-                'user_id' => $user_id,
-            ]);
-            if ($run) {
+            $stmt->bindValue(':scheduled_class', $scheduled_class);
+            $stmt->execute();
+            $class = $stmt->fetch();
+            if ($class) {
+
+
                 redirect('faculty_dashboard.php');
+                // die();
+            } else {
+                $sql = "INSERT INTO classes (department_id, scheduled_class, subject_schedule_id, google_meet_link, user_id )
+                VALUES (:department_id, :scheduled_class, :subject_schedule_id, :google_meet_link, :user_id)";
+                $stmt = $this->conn->prepare($sql);
+                $run = $stmt->execute([
+                    'department_id' => $department_id,
+                    'scheduled_class' => $scheduled_class,
+                    'subject_schedule_id' => $subject_schedule_id,
+                    'google_meet_link' => $google_meet_link,
+                    'user_id' => $user_id,
+                ]);
+                if ($run) {
+                    $_SESSION['message'] = 'A class has been created';
+                    $_SESSION['type'] = 'success';
+                    redirect('faculty_dashboard.php');
+                }
             }
         }
     }
@@ -96,10 +120,13 @@ class Classes extends Connection
         $stmt = $this->conn->prepare($sql);
         $deleted = $stmt->execute(['id' => $id]);
         if ($deleted) {
-            $_SESSION['success'] = 'A class has been deleted';
+            $_SESSION['type'] = 'success';
+            $_SESSION['message'] = 'A class has been deleted';
             redirect('faculty_dashboard.php');
         } else {
-            $_SESSION['danger'] = 'A class cannot be deleted because of associated data';
+            // $_SESSION['danger'] = 'A class cannot be deleted because of associated data';
+            $_SESSION['type'] = 'error';
+            $_SESSION['message'] = 'A class cannot be deleted because of associated data';
             redirect('faculty_dashboard.php');
         }
     }
@@ -148,6 +175,58 @@ class Classes extends Connection
                 message('success', 'A department has been updated');
                 redirect('departments.php');
             }
+        }
+    }
+
+
+    public function updateClass($data, $files)
+    {
+        $newImageName = '';
+        if ($files) {
+            $newImageName =  $files['screen_shot']['name'];
+            $tmpName = $files['screen_shot']['tmp_name'];
+            $targetDirectory = ROOT_PATH . "/assets/imgs/screenshots/" .  $newImageName;
+            move_uploaded_file($tmpName, $targetDirectory);
+        }
+
+        $current_class = $data['id'];
+        $start_time = date('Y-m-d H:i:s');
+
+
+        $sql = "UPDATE classes set start_time=:start_time, is_sent_to_monitoring=:is_sent_to_monitoring, screen_shot=:screen_shot WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $run = $stmt->execute([
+            'start_time' => $start_time,
+            'is_sent_to_monitoring' => 1,
+            'screen_shot' => $newImageName,
+            'id' => $current_class,
+        ]);
+        if ($run) {
+            redirect('class.php?id=' . $current_class);
+        }
+    }
+
+    public function updateEndClass($data)
+    {
+
+        $current_class = $data['id'];
+        $activeClass = $this->getClass($current_class);
+        $end_time = date('Y-m-d H:i:s');
+        $duration = calculateDuration($activeClass->start_time, $end_time);
+        //2016-06-01 22:45:00
+        // 2021-04-04 16:34:37
+        $final_duration = $duration[0] . ':' . $duration[1] . ':' . $duration[2];
+
+
+        $sql = "UPDATE classes SET end_time=:end_time, duration=:duration  WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $run = $stmt->execute([
+            'end_time' => $end_time,
+            'duration' => $final_duration,
+            'id' => $current_class,
+        ]);
+        if ($run) {
+            redirect('class.php?id=' . $current_class);
         }
     }
 }
