@@ -13,4 +13,7 @@ session_start();
 
 // instantiate user model
 $user = new User();
+
+// // Turn off all error reporting
+// error_reporting(0);
     // instantiate middlewares

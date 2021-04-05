@@ -58,3 +58,25 @@ function calculateDuration($time1, $time2)
               $seconds
        );
 }
+
+
+function AddPlayTime($timesArray)
+{
+       $all_seconds = 0;
+       // loop throught all the times
+       foreach ($timesArray as $time) {
+              list($hour, $minute, $second) = explode(':', $time);
+              $all_seconds += $hour * 3600;
+              $all_seconds += $minute * 60;
+              $all_seconds += $second;
+       }
+
+
+       $total_minutes = floor($all_seconds / 60);
+       $seconds = $all_seconds % 60;
+       $hours = floor($total_minutes / 60);
+       $minutes = $total_minutes % 60;
+
+       // returns the time already formatted
+       return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+}

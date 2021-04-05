@@ -18,14 +18,16 @@ if (isset($_POST['end_class'])) {
   $class->updateEndClass($_POST);
 }
 $activeClass = $class->getClass($_GET['id']);
+if (empty($activeClass)) {
+  redirect('faculty_dashboard.php');
+}
 
-$screenshot = '../assets/imgs/logo.png';
+$screenshot = '';
 
-is_null($activeClass->screen_shot) ? '../assets/imgs/logo.png'
-  : '../assets/imgs/screenshots/' . $activeClass->screen_shot;
-
-if (!is_null($activeClass->screen_shot)) {
+if (!empty($activeClass->screen_shot)) {
   $screenshot = '../assets/imgs/screenshots/' . $activeClass->screen_shot;
+} else {
+  $screenshot = '../assets/imgs/logo.png';
 }
 
 ?>
@@ -100,9 +102,14 @@ if (!is_null($activeClass->screen_shot)) {
                 </div>
               <?php endif; ?>
 
+              <!--
+                  AAAYUSIN BUKAS YUNG SEND TO MONITORING NG FACULTY KAPAG NAEND CLASS NG MONITORING STAFF
+
+                -->
+
               <div class="form-group">
                 <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
-                <?php if (!$activeClass->is_sent_to_monitoring) : ?>
+                <?php if (empty($activeClass->start_time)) : ?>
                   <button type="submit" class="btn btn-danger btn-md" name="send_to_monitoring">Send to Monitoring</button>
 
                   <small id="passwordHelpBlock" class="form-text text-muted">
@@ -117,7 +124,7 @@ if (!is_null($activeClass->screen_shot)) {
               </div>
             </form>
 
-            <?php if (is_null($activeClass->end_time)) : ?>
+            <?php if ($activeClass->is_sent_to_monitoring && is_null($activeClass->duration)) : ?>
               <div class="" id="end_class">
                 <form action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id'] ?>" method="POST">
                   <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>">
@@ -203,5 +210,6 @@ if (!is_null($activeClass->screen_shot)) {
   //   document.querySelector('#end_class').classList.remove('hidden');
   // })
 </script>
+<?php include '../app/includes/admin/footer.php' ?>
 
 <?php ob_flush(); ?>

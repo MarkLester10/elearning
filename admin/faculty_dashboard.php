@@ -3,8 +3,12 @@ ob_start();
 require_once '../core.php';
 require_once '../path.php';
 require_once  '../app/includes/admin/header_dashboard.php';
+
 require_once  '../app/middlewares/Auth.php';
 require_once  '../app/middlewares/Faculty.php';
+// // Turn off all error reporting
+// error_reporting(0);
+
 
 
 $activeDepartment = new Department();
@@ -49,27 +53,38 @@ $activeUser = $class->getUser($_SESSION['id']);
             <h2 class="uppercase">Faculty</h2>
           </div>
         </div>
-
-        <!--message-->
-        <?php include '../app/includes/message.php' ?>
-
-        <!-- breadcrumbs -->
-        <nav aria-label="breadcrumb" class="mt-6">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item flex items-center gap-2">
-              <i class="fa fa-check-circle text-green-500"></i>
-              <a href="#">Room List</a>
-            </li>
-          </ol>
-        </nav>
-
-        <!-- Select Room Form -->
         <div id="app">
-          <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
+          <!--message-->
+          <!-- <?php include '../app/includes/message.php' ?> -->
+
+          <div class="mt-4">
+            <p v-if="is_created" class="rounded-md shadow-md py-2 px-2 tracking-wider text-sm text-center text-white bg-red-500">
+              You Already have this class.
+            </p>
+            <p v-if="message" class="rounded-md shadow-md py-2 px-2 tracking-wider text-sm text-center text-white bg-green-500">
+              {{message}}
+            </p>
+          </div>
+
+          <!-- breadcrumbs -->
+          <nav aria-label="breadcrumb" class="mt-6">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item flex items-center gap-2">
+                <i class="fa fa-check-circle text-green-500"></i>
+                <a href="faculty_dashboard.php">Room List</a>
+              </li>
+            </ol>
+          </nav>
+
+          <!-- Select Room Form -->
+
+          <input id="faculty_id" type="hidden" value="<?php echo $activeUser->id ?>">
+          <form @submit.prevent="addClass">
             <div class="flex items-center justify-center gap-4">
               <input type="hidden" v-model="url" value="<?php echo BASE ?>">
               <div class="form-group w-full">
-                <select class="form-control" @change="getSubjects" v-model="department_id" name="department_id" required>
+
+                <select id="department_id" class="form-control" @change="getSubjects" v-model="department_id" name="department_id" required>
                   <option value="">Select Department</option>
                   <?php foreach ($departments as $department) : ?>
                     <option value="<?php echo $department->id ?>"><?php echo $department->name ?></option>
@@ -77,7 +92,7 @@ $activeUser = $class->getUser($_SESSION['id']);
                 </select>
               </div>
               <div class="form-group w-full">
-                <select class="form-control" name="subject_schedule_id" required>
+                <select class="form-control" v-model="newClass.subject_schedule_id" name="subject_schedule_id" required>
                   <option value="">Select Subject/Schedule</option>
                   <option v-for="subject in subjects" :key="subject.id" :value="subject.id">
                     {{subject.subject_name}} - {{subject.schedule}}
@@ -85,68 +100,61 @@ $activeUser = $class->getUser($_SESSION['id']);
                 </select>
               </div>
               <div class="form-group w-full">
-                <input type="text" name="google_meet_link" class="form-control" placeholder="Enter Google Meet Link" required>
+                <input type="text" v-model="newClass.google_meet_link" name="google_meet_link" class="form-control" placeholder="Enter Google Meet Link" required>
               </div>
               <div class="form-group w-full">
                 <button class="btn btn-danger" type="submit" name="add_class"><i class="fa fa-plus"></i></button>
               </div>
             </div>
           </form>
-        </div>
 
-        <!-- Table -->
-        <div class="table-responsive">
-          <table class="table bg-white" id="resultTbl">
-            <thead class="thead-dark">
-              <tr class="text-center align-items-center">
-                <th scope="col">ROOM ID</th>
-                <th scope="col">ROOM/DEPARTMENT/SUBJECT/TIME</th>
-                <th scope="col">MONITORING STAFF</th>
-                <th scope="col">MONITORING STATUS</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($classes as $key => $singleClass) : ?>
-                <tr class="text-center">
-                  <th scope="row" class="text-sm">TCU-MSU - <?php echo $singleClass->id ?></th>
+          <!-- Table -->
+          <div class="table-responsive">
+            <table class="table bg-white" id="resultTbl">
+              <thead class="thead-dark">
+                <tr class="text-center align-items-center">
+                  <th scope="col">ROOM ID</th>
+                  <th scope="col">ROOM/DEPARTMENT/SUBJECT/TIME</th>
+                  <th scope="col">MONITORING STATUS</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr class="text-center" v-for="classItem in classes" :key="classItem.id">
+                  <th scope="row" class="text-sm">TCU-MSU - {{classItem.id}}</th>
                   <td>
-                    <a href="class.php?id=<?php echo $singleClass->id ?>" class="hover:underline text-blue-400">
-                      <?php echo $singleClass->scheduled_class ?>
+                    <!-- :href="'/user/profile.php?username='+comment.username+'&id='+comment.user_id" -->
+                    <a :href="'class.php?id='+classItem.id" class="hover:underline text-blue-400">
+                      {{classItem.scheduled_class}}
                     </a>
                   </td>
-                  <?php $staff = $class->getUser($singleClass->monitoring_id) ?>
-                  <td><?php echo (!empty($staff)) ? ucfirst($staff->firstname) . ' ' . ucfirst($staff->lastname) : '<span class="text-danger">pending</span>' ?></td>
-
                   <td class="d-flex justify-content-center">
-                    <?php if (!is_null($singleClass->start_time) && is_null($singleClass->end_time)) : ?>
-                      <div class="w-4 h-4 rounded-full bg-red-400 relative">
-                        <div class="absolute inset-0 w-full h-full animate-ping bg-red-500 rounded-full">
-                        </div>
+                    <div v-if="classItem.start_time != null && classItem.end_time ==null" class="w-4 h-4 rounded-full bg-red-400 relative">
+                      <div class="absolute inset-0 w-full h-full animate-ping bg-red-500 rounded-full">
                       </div>
-                    <?php elseif (!is_null($singleClass->start_time) && !is_null($singleClass->end_time)) : ?>
-                      <span class="text-green-500">Recorded</span>
-                    <?php else : ?>
-                      <span class="text-muted">not monitored</span>
-                    <?php endif; ?>
+                    </div>
+                    <span v-else-if="classItem.start_time != null && classItem.end_time !=null" class="text-green-500">Recorded</span>
+                    <span v-else class="text-muted">not monitored</span>
 
                   </td>
 
                   <td>
 
-                    <a href="<?php echo $_SERVER['PHP_SELF'] ?>?delete_id=<?php echo $singleClass->id ?>" class="text-danger" onclick="return confirm('Are you sure you want to delete this class?');">
+                    <a :href="'faculty_dashboard.php?delete_id='+classItem.id" class="text-danger" onclick="return confirm('Are you sure you want to delete this class?');">
                       delete
                     </a>
                   </td>
                 </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
+
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<?php include '../app/includes/admin/footer.php' ?>
 <?php ob_flush(); ?>
+<?php include '../app/includes/admin/footer.php' ?>

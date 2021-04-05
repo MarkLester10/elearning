@@ -104,7 +104,7 @@ function sendMail($user, $token)
 
     <body style="background-color:#faf9fc;">
       <div class="logo">
-        <img src="https://i.ibb.co/yRs12zX/logo1.png" alt="logo1" />
+        <img src="https://i.imgur.com/f2Fvyux.pngg" alt="logo1" />
       </div>
 
       <div class="wrapper" style="text-align:center;background-color:#fff;">
@@ -113,8 +113,7 @@ function sendMail($user, $token)
         </h2>
 
         <h4 style="text-align: center">
-          You\'re almost ready to start ejoying your account <br>
-          click the button below to setup your account.
+          Click the button below to setup your account.
         </h4>
 
         <a style="text-decoration: none;color: #fff;text-align: center;" href="http://localhost/lms/change_password.php?token=' . $token . '" class="btn">Setup Account</a>
@@ -123,7 +122,7 @@ function sendMail($user, $token)
       <footer>
         <div class="content">
           <div class="logo">
-            <img src="https://i.ibb.co/9Zj61q3/logo3.png" alt="logo3" />
+            <img src="https://i.imgur.com/f2Fvyux.png" alt="logo3" />
           </div>
 
           <h5 style="text-align: center; margin: 0">

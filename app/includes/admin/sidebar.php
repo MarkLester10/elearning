@@ -67,8 +67,21 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item menu-open">
-                    <a href="#" class=" nav-link ">
+                <li class="nav-item menu-open
+                <?php echo (strpos(CURRENT_URL, 'profile') !== false) ? 'active' : '' ?>
+                ">
+
+                    <a href="setup_profile.php" class=" nav-link ">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>
+                            Profile
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open
+                <?php echo (strpos(CURRENT_URL, 'result') !== false) ? 'active' : '' ?>
+                ">
+                    <a href="result.php" class=" nav-link ">
                         <i class="nav-icon fas fa-user-tie"></i>
                         <p>
                             Monitoring Result
@@ -76,6 +89,40 @@
                     </a>
                 </li>
             <?php endif; ?>
+
+            <?php if ($_SESSION['position_id'] === 3) : ?>
+                <li class="nav-item menu-open
+                <?php echo (strpos(CURRENT_URL, 'monitoring_dashboard.php') !== false) ? 'active' : '' ?>
+                ">
+                    <a href="faculty_dashboard.php" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="setup_profile.php" class=" nav-link
+                    <?php echo (strpos(CURRENT_URL, 'profile.php') !== false) ? 'active' : '' ?>
+                    ">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>
+                            Profile
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="analytics.php" class=" nav-link
+                    <?php echo (strpos(CURRENT_URL, 'analytic.php') !== false) ? 'active' : '' ?>
+                    ">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>
+                            Analytics
+                        </p>
+                    </a>
+                </li>
+            <?php endif; ?>
+
 
         </ul>
     </nav>

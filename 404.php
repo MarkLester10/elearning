@@ -128,6 +128,7 @@
         <div class="row">
             <div class="col-12">
                 <h1 class="text-center text-secondary mt-5">Page Not Found</h1>
+                <a href="login.php" class="btn btn-primary">Go back to page</a>
             </div>
             <div class="col-12">
                 <div class="main">

@@ -264,30 +264,65 @@ class AdminUser extends Connection
 
     public function setUpProfile($data, $file)
     {
+        $run = '';
         $newImageName =  time() . '_' . $_FILES['image']['name'];
         $tmpName = $_FILES['image']['tmp_name'];
         $targetDirectory = ROOT_PATH . "/assets/imgs/profiles/" .  $newImageName;
-        if (move_uploaded_file($tmpName, $targetDirectory)) {
-            $user = $this->getUser($_SESSION['id']);
+        move_uploaded_file($tmpName, $targetDirectory);
 
-            // $image = time() . "_" . $_FILES['image']['name'];
-            $sql = "UPDATE users set image=:image, department_id=:department_id, mobile_no=:mobile_no,
-            b_day=:bday,job=:job, degree=:degree WHERE id=:id";
-            $stmt = $this->conn->prepare($sql);
-            $run = $stmt->execute([
-                'image' => $newImageName,
-                'department_id' => $this->data['department_id'],
-                'mobile_no' => $this->data['mobile_no'],
-                'bday' => $this->data['b_day'],
-                'job' => $this->data['job'],
-                'degree' => $this->data['degree'],
-                'id' => $user->id,
-            ]);
-            if ($run) {
-                message('success', 'Your profile information has been updated');
-                redirect('faculty_dashboard.php');
-            }
+        $user = $this->getUser($_SESSION['id']);
+
+        // $image = time() . "_" . $_FILES['image']['name'];
+        //if email exist
+        if (empty($data['email'])) {
+            $run = $this->updateWithEmail($newImageName, $data);
+        } else {
+            $run = $this->updateWithoutEmail($newImageName, $data);
         }
+        //update only wihtouy emai
+        //update with email
+        if ($run) {
+            message('success', 'Your profile information has been updated');
+            redirect('faculty_dashboard.php');
+        }
+    }
+
+    private function updateWithEmail($newImageName, $data)
+    {
+        $sql = "UPDATE users set image=:image, firstname=:firstname, lastname=:lastname, department_id=:department_id, email=:email, mobile_no=:mobile_no,
+        b_day=:bday,job=:job, degree=:degree WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $run = $stmt->execute([
+            'image' => $newImageName,
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'department_id' => $data['department_id'],
+            'email' => $data['email'],
+            'mobile_no' => $data['mobile_no'],
+            'bday' => $data['b_day'],
+            'job' => $data['job'],
+            'degree' => $data['degree'],
+            'id' => $_SESSION['id'],
+        ]);
+        return $run;
+    }
+    private function updateWithoutEmail($newImageName, $data)
+    {
+        $sql = "UPDATE users set image=:image, firstname=:firstname, lastname=:lastname, department_id=:department_id, mobile_no=:mobile_no,
+        b_day=:bday,job=:job, degree=:degree WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $run = $stmt->execute([
+            'image' => $newImageName,
+            'firstname' => $data['firstname'],
+            'lastname' => $data['lastname'],
+            'department_id' => $data['department_id'],
+            'mobile_no' => $data['mobile_no'],
+            'bday' => $data['b_day'],
+            'job' => $data['job'],
+            'degree' => $data['degree'],
+            'id' => $_SESSION['id'],
+        ]);
+        return $run;
     }
 
 

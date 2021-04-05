@@ -3,13 +3,40 @@ ob_start();
 require_once '../core.php';
 require_once '../path.php';
 require_once  '../app/includes/admin/header.php';
+require_once  '../app/middlewares/Auth.php';
 
 
 
 
-
+$averageTime = '00:00:00';
+$totalDuration = '00:00:00';
 $class = new Classes();
 $classes = $class->getResults();
+if (!empty($classes)) {
+
+  $timesArray = [];
+  foreach ($classes as $item) {
+    array_push($timesArray, $item->duration);
+  }
+  $averageTime =  date('H:i:s', array_sum(array_map('strtotime', $timesArray)) / count($timesArray));
+  // $totalDuration =  date('H:i:s', array_sum(array_map('strtotime', $timesArray)) / 1);
+  $totalDuration = AddPlayTime($timesArray);
+}
+
+
+
+
+
+
+
+
+
+// die();
+
+// $averageTime = getAverageDuration($timesArray);
+
+
+
 
 $activeUser = $class->getUser($_SESSION['id']);
 ?>
@@ -53,6 +80,14 @@ $activeUser = $class->getUser($_SESSION['id']);
         <!-- Table -->
         <div class="table-responsive">
           <table class="table bg-white" id="resultTbl">
+            <div class="flex gap-4 w-1/3 my-2">
+              <span class="block p-2 bg-green-600 text-white text-lg">
+                Total Duration: <b><?php echo $totalDuration ?></b>
+              </span>
+              <span class="block p-2 bg-red-400 text-white text-lg">
+                Average Duration: <b><?php echo $averageTime ?></b>
+              </span>
+            </div>
             <thead class="thead-dark">
               <tr>
                 <th scope="col">DEPARTMENT</th>
@@ -74,8 +109,8 @@ $activeUser = $class->getUser($_SESSION['id']);
                   <td><?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?></td>
                   <td><?php echo $class->getSubject($singleClass->subject_schedule_id)->subject_name ?></td>
                   <td><?php echo shortDate($singleClass->created_at) ?></td>
-                  <td><?php echo shortDate($singleClass->start_time); ?></td>
-                  <td><?php echo shortDate($singleClass->end_time); ?></td>
+                  <td><?php echo formatDate2($singleClass->start_time, true); ?></td>
+                  <td><?php echo formatDate2($singleClass->end_time, true); ?></td>
                   <td><?php echo $singleClass->duration ?></td>
 
                 </tr>

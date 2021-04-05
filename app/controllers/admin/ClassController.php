@@ -107,7 +107,7 @@ class Classes extends Connection
                 if ($run) {
                     $_SESSION['message'] = 'A class has been created';
                     $_SESSION['type'] = 'success';
-                    redirect('faculty_dashboard.php');
+                    header('location: faculty_dashboard.php');
                 }
             }
         }
@@ -120,14 +120,14 @@ class Classes extends Connection
         $stmt = $this->conn->prepare($sql);
         $deleted = $stmt->execute(['id' => $id]);
         if ($deleted) {
-            $_SESSION['type'] = 'success';
             $_SESSION['message'] = 'A class has been deleted';
-            redirect('faculty_dashboard.php');
+            // $_SESSION['type'] = 'success';
+            header('location: faculty_dashboard.php');
         } else {
             // $_SESSION['danger'] = 'A class cannot be deleted because of associated data';
-            $_SESSION['type'] = 'error';
+            // $_SESSION['type'] = 'error';
             $_SESSION['message'] = 'A class cannot be deleted because of associated data';
-            redirect('faculty_dashboard.php');
+            header('location: faculty_dashboard.php');
         }
     }
     // get single department
@@ -181,29 +181,57 @@ class Classes extends Connection
 
     public function updateClass($data, $files)
     {
+        $current_user = $_SESSION['id'];
+        $current_class = $data['id'];
+        $start_time = date('Y-m-d H:i:s');
         $newImageName = '';
+        $run = '';
         if ($files) {
             $newImageName =  $files['screen_shot']['name'];
             $tmpName = $files['screen_shot']['tmp_name'];
             $targetDirectory = ROOT_PATH . "/assets/imgs/screenshots/" .  $newImageName;
             move_uploaded_file($tmpName, $targetDirectory);
+            $sql = "UPDATE classes set start_time=:start_time, is_sent_to_monitoring=:is_sent_to_monitoring, screen_shot=:screen_shot WHERE id=:id";
+            $stmt = $this->conn->prepare($sql);
+            $run = $stmt->execute([
+                'start_time' => $start_time,
+                'is_sent_to_monitoring' => 1,
+                'screen_shot' => $newImageName,
+                'id' => $current_class,
+            ]);
+            if ($run) {
+                $sql = "UPDATE users set is_sent_to_monitoring=:is_sent_to_monitoring WHERE id=:user_id ";
+                $stmt = $this->conn->prepare($sql);
+                $run = $stmt->execute([
+                    'is_sent_to_monitoring' => 1,
+                    'user_id' => $current_user,
+                ]);
+            }
+        } else {
+            $sql = "UPDATE classes set start_time=:start_time, is_sent_to_monitoring=:is_sent_to_monitoring WHERE id=:id";
+            $stmt = $this->conn->prepare($sql);
+            $run = $stmt->execute([
+                'start_time' => $start_time,
+                'is_sent_to_monitoring' => 1,
+                'id' => $current_class,
+            ]);
+            if ($run) {
+                $sql = "UPDATE users set is_sent_to_monitoring=:is_sent_to_monitoring WHERE id=:user_id ";
+                $stmt = $this->conn->prepare($sql);
+                $run = $stmt->execute([
+                    'is_sent_to_monitoring' => 1,
+                    'user_id' => $current_user,
+                ]);
+            }
         }
 
-        $current_class = $data['id'];
-        $start_time = date('Y-m-d H:i:s');
-
-
-        $sql = "UPDATE classes set start_time=:start_time, is_sent_to_monitoring=:is_sent_to_monitoring, screen_shot=:screen_shot WHERE id=:id";
-        $stmt = $this->conn->prepare($sql);
-        $run = $stmt->execute([
-            'start_time' => $start_time,
-            'is_sent_to_monitoring' => 1,
-            'screen_shot' => $newImageName,
-            'id' => $current_class,
-        ]);
         if ($run) {
             redirect('class.php?id=' . $current_class);
         }
+    }
+
+    private function move_file()
+    {
     }
 
     public function updateEndClass($data)
@@ -213,8 +241,6 @@ class Classes extends Connection
         $activeClass = $this->getClass($current_class);
         $end_time = date('Y-m-d H:i:s');
         $duration = calculateDuration($activeClass->start_time, $end_time);
-        //2016-06-01 22:45:00
-        // 2021-04-04 16:34:37
         $final_duration = $duration[0] . ':' . $duration[1] . ':' . $duration[2];
 
 
@@ -226,6 +252,13 @@ class Classes extends Connection
             'id' => $current_class,
         ]);
         if ($run) {
+            $sql = "UPDATE users set is_sent_to_monitoring=:is_sent_to_monitoring, is_monitored=:is_monitored WHERE id=:user_id ";
+            $stmt = $this->conn->prepare($sql);
+            $run = $stmt->execute([
+                'is_sent_to_monitoring' => 0,
+                'is_monitored' => 0,
+                'user_id' => $_SESSION['id'],
+            ]);
             redirect('class.php?id=' . $current_class);
         }
     }
