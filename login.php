@@ -3,7 +3,6 @@ include 'path.php';
 require_once  'core.php';
 require_once 'app/middlewares/Guess.php';
 
-
 $email = $password1 = '';
 if (isset($_POST['login'])) {
     // instantiate user validator

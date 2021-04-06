@@ -1,7 +1,27 @@
-<div class="sidebar">
-    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+<?php
+
+$activeUser = $user->getUser();
+// print_r($activeUser);
+
+
+?>
+
+<div class="sidebar
+<?php if ($_SESSION['position_id'] == 1) : ?>
+    sidebar-admin
+    <?php elseif ($_SESSION['position_id'] == 2) : ?>
+      sidebar-faculty
+    <?php else : ?>
+      sidebar-monitoring
+    <?php endif; ?>
+">
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
         <div class="image">
-            <img src="https://ui-avatars.com/api/?name=<?php echo $user->getFullName() ?>" class="img-circle elevation-2" alt="User Image">
+            <?php if (!$activeUser->image) : ?>
+                <img src="https://ui-avatars.com/api/?name=<?php echo $user->getFullName() ?>" class="img-circle elevation-2" alt="User Image">
+            <?php else : ?>
+                <img src="../assets/imgs/profiles/<?php echo $activeUser->image ?>" class="img-circle  elevation-2" alt="User Image">
+            <?php endif; ?>
         </div>
         <div class="info">
             <a href="" class="d-block"><?php echo $user->getFullName() ?></a>

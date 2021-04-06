@@ -264,6 +264,7 @@ class AdminUser extends Connection
 
     public function setUpProfile($data, $file)
     {
+        // dump($data);
         $run = '';
         $newImageName =  time() . '_' . $_FILES['image']['name'];
         $tmpName = $_FILES['image']['tmp_name'];
@@ -289,6 +290,7 @@ class AdminUser extends Connection
 
     private function updateWithEmail($newImageName, $data)
     {
+
         $sql = "UPDATE users set image=:image, firstname=:firstname, lastname=:lastname, department_id=:department_id, email=:email, mobile_no=:mobile_no,
         b_day=:bday,job=:job, degree=:degree WHERE id=:id";
         $stmt = $this->conn->prepare($sql);
@@ -296,12 +298,12 @@ class AdminUser extends Connection
             'image' => $newImageName,
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
-            'department_id' => $data['department_id'],
+            'department_id' => !isset($data['department_id']) ? NULL : $data['department_id'],
             'email' => $data['email'],
             'mobile_no' => $data['mobile_no'],
             'bday' => $data['b_day'],
-            'job' => $data['job'],
-            'degree' => $data['degree'],
+            'job' =>  !isset($data['job']) ? NULL : $data['job'],
+            'degree' =>  !isset($data['degree']) ? NULL : $data['degree'],
             'id' => $_SESSION['id'],
         ]);
         return $run;
@@ -315,11 +317,11 @@ class AdminUser extends Connection
             'image' => $newImageName,
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
-            'department_id' => $data['department_id'],
+            'department_id' => !isset($data['department_id']) ? NULL : $data['department_id'],
             'mobile_no' => $data['mobile_no'],
             'bday' => $data['b_day'],
-            'job' => $data['job'],
-            'degree' => $data['degree'],
+            'job' =>  !isset($data['job']) ? NULL : $data['job'],
+            'degree' =>  !isset($data['degree']) ? NULL : $data['degree'],
             'id' => $_SESSION['id'],
         ]);
         return $run;

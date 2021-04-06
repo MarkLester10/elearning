@@ -11,6 +11,13 @@ date_default_timezone_set('Asia/Singapore');
 // start session
 session_start();
 
+function dump($value) // to be deleted soon
+
+{
+    echo "<pre>", print_r($value, true), "</pre>";
+    die();
+}
+
 // instantiate user model
 $user = new User();
 

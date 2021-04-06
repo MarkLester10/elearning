@@ -88,6 +88,9 @@ $activeUser = $class->getUser($_SESSION['id']);
                 Average Duration: <b><?php echo $averageTime ?></b>
               </span>
             </div>
+
+            <?php echo date('Y-m-d h:i:A') ?>
+
             <thead class="thead-dark">
               <tr>
                 <th scope="col">DEPARTMENT</th>
@@ -101,7 +104,7 @@ $activeUser = $class->getUser($_SESSION['id']);
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($classes as $singleClass) : ?>
+              <?php foreach ($classes as $key => $singleClass) : ?>
                 <tr>
                   <th><?php echo $class->getDepartment($singleClass->department_id)->name ?></th>
                   <?php $staff = $class->getUser($singleClass->monitoring_id) ?>
@@ -111,7 +114,10 @@ $activeUser = $class->getUser($_SESSION['id']);
                   <td><?php echo shortDate($singleClass->created_at) ?></td>
                   <td><?php echo formatDate2($singleClass->start_time, true); ?></td>
                   <td><?php echo formatDate2($singleClass->end_time, true); ?></td>
-                  <td><?php echo $singleClass->duration ?></td>
+                  <td>
+                    <?php echo $singleClass->duration ?>
+                    <br>
+                  </td>
 
                 </tr>
               <?php endforeach ?>

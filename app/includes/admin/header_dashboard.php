@@ -35,7 +35,15 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4
+        <?php if ($_SESSION['position_id'] == 1) : ?>
+    sidebar-admin
+    <?php elseif ($_SESSION['position_id'] == 2) : ?>
+      sidebar-faculty
+    <?php else : ?>
+      sidebar-monitoring
+    <?php endif; ?>
+        ">
             <!-- Brand Logo -->
             <a href="../index.php" class="brand-link d-flex align-items-center">
                 <img src="../assets/imgs/logo.png" alt="TCS Monitoring" class="w-full brand-image">

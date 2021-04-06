@@ -17,7 +17,7 @@ $subjectsCount = $dashboard->getSubjectsCount();
 
 <section class="content">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row justify-content-center">
             <?php include '../app/includes/message.php' ?>
             <div class="col-lg-3 col-6">
                 <!-- small box -->
@@ -61,22 +61,8 @@ $subjectsCount = $dashboard->getSubjectsCount();
                     <a href="loans.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
-            <!-- ./col -->
-            <div class="col-lg-3 col-6">
-                <!-- small box -->
-                <div class="small-box bg-secondary">
-                    <div class="inner">
-                        <h3>5</h3>
 
-                        <p>Class</p>
-                    </div>
-                    <div class="icon">
-                        <i class="far fa-credit-card"></i>
-                    </div>
-                    <a href="payments.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                </div>
-            </div>
-            <!-- ./col -->
+
             <div class="col-md-6 mx-auto mt-5">
                 <h5 class="text-center">Monitoring Summary</h5>
                 <canvas id="myChart" width="400" height="200"></canvas>
@@ -105,21 +91,21 @@ $subjectsCount = $dashboard->getSubjectsCount();
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Users', 'Loans', 'Users', 'Payments'],
+            labels: ['Departments', 'Subjects', 'Users', ],
             datasets: [{
                 label: 'Total Result',
-                data: [usersCount, departmentsCount, subjectsCount, paymentsCount],
+                data: [usersCount, departmentsCount, subjectsCount],
                 backgroundColor: [
                     '#17a2b8',
                     '#28a745',
                     '#ffc107',
-                    '#6c757d',
+
                 ],
                 borderColor: [
                     '#333',
                     '#333',
                     '#333',
-                    '#333',
+
                 ],
                 borderWidth: 1
             }]

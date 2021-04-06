@@ -78,9 +78,11 @@ class UserController extends Connection
                 'id' => $user->id,
             ]);
             if ($run) {
+
                 echo 'password updated';
                 message('success', 'You have successfuly added password to your account');
                 $_SESSION['id'] = $user->id;
+                $_SESSION['position_id'] = $user->position_id;
                 redirect('admin/setup_profile.php?id=' . $user->id);
             } else {
                 'failed';

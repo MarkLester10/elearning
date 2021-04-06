@@ -26,7 +26,7 @@ $departments = $activeDepartment->index();
 
 $email = '';
 if (isset($_POST['create'])) {
-
+    // dump($_POST);
     $adminUser->setUpProfile($_POST, $_FILES);
 }
 
@@ -73,14 +73,17 @@ if (isset($_POST['create'])) {
                             <img src="<?php echo $image ?>" alt="profile" id="screenshotPreview" width="100" height="100" class="border my-2 p-2">
 
                         </div>
+
+
                     </div>
                     <div class="row">
-                        <div class="col">
+
+                        <div class="col <?php echo ($activeUser->position_id == 3) ? 'd-none' : '' ?>">
                             <label for="department_id">Select Department</label>
-                            <select name="department_id" id="department_id" class="form-control">
-                                <option value="" required> Choose Department</option>
+                            <select name="department_id" id="department_id" required class="form-control" <?php echo ($activeUser->position_id == 3) ? 'disabled' : '' ?>>
+                                <option value=""> Choose Department</option>
                                 <?php foreach ($departments as $department) : ?>
-                                    <option value="<?php echo $department->id ?>" required <?php echo ($department->id == $activeUser->department_id) ? 'selected' : '' ?>>
+                                    <option value="<?php echo $department->id ?>" <?php echo ($department->id == $activeUser->department_id) ? 'selected' : '' ?>>
                                         <?php echo $department->name ?>
 
                                     </option>
@@ -89,6 +92,8 @@ if (isset($_POST['create'])) {
                             </select>
 
                         </div>
+
+
                         <div class="col">
                             <label for="image">Profile Image</label>
                             <input type="file" onchange="displayImage(this, '#screenshotPreview')" name="image" id="image" class="form-control" required>
@@ -112,13 +117,25 @@ if (isset($_POST['create'])) {
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <div class="col">
+                        <div class="col <?php echo ($activeUser->position_id == 3) ? 'd-none' : '' ?>">
                             <label for="job">Job</label>
-                            <input type="text" name="job" id="job" class="form-control" value="<?php echo $activeUser->job ?>">
+                            <select name="job" id="job" class="form-control" required <?php echo ($activeUser->position_id == 3) ? 'disabled' : '' ?>>
+                                <option value="">Choose Job</option>
+                                <option value="full-time" <?php echo ($activeUser->job == 'full-time') ? 'selected' : '' ?>>Full Time</option>
+                                <option value="part-time" <?php echo ($activeUser->job == 'part-time') ? 'selected' : '' ?>>Part Time</option>
+                            </select>
+                            <!-- <input type="text" name="job" id="job" class="form-control" value="<?php echo $activeUser->job ?>"> -->
                         </div>
-                        <div class="col">
+                        <div class="col <?php echo ($activeUser->position_id == 3) ? 'd-none' : '' ?>">
                             <label for="degree">Degree</label>
-                            <input type="text" name="degree" id="degree" required class="form-control" value="<?php echo $activeUser->degree ?>">
+                            <select name="degree" id="degree" class="form-control" required <?php echo ($activeUser->position_id == 3) ? 'disabled' : '' ?>>
+                                <option value="">Choose Degree</option>
+                                <option value="graduate" <?php echo ($activeUser->degree == 'graduate') ? 'selected' : '' ?>>Graduate</option>
+                                <option value="under-graduate" <?php echo ($activeUser->degree == 'under-graduate') ? 'selected' : '' ?>>Under Graduate</option>
+                            </select>
+
+
+                            <!-- <input type="text" name="degree" id="degree" required class="form-control" value="<?php echo $activeUser->degree ?>"> -->
                         </div>
                     </div>
                 </div>

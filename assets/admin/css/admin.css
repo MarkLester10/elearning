@@ -26,3 +26,12 @@
   background: #e0810d;
   border: 1px solid #fff !important;
 }
+.sidebar-admin {
+  background: rgb(3, 107, 148) !important;
+}
+.sidebar-faculty {
+  background: rgb(92, 1, 1) !important;
+}
+.sidebar-monitoring {
+  background: rgb(10, 151, 10) !important;
+}
