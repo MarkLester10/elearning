@@ -1,3 +1,5 @@
 <?php
+// require_once 'app/middlewares/Auth.php';
 require_once 'core.php';
-echo $user->getFullName();
+
+redirect('login.php');

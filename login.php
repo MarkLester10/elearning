@@ -43,6 +43,7 @@ if (isset($_POST['login'])) {
             <div class="row">
                 <div class="col-md-5 mx-auto shadow p-3 bg-white register">
                     <?php include 'app/includes/message.php' ?>
+
                     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="POST">
                         <div class="mx-auto shadow-md p-4">
                             <img src="./assets/imgs/logo.png" class="w-8/12 mx-auto" alt="">

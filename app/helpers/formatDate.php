@@ -8,7 +8,7 @@ function formatDate2($date, $timeOnly = false)
 {
     $d = new DateTime($date);
     if ($timeOnly) {
-        return $d->format('H:i:s A');
+        return $d->format('g:i:s A');
     } else {
         return $d->format('Y-m-d H:i:s');
     }

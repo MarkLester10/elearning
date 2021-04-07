@@ -60,7 +60,7 @@ function calculateDuration($time1, $time2)
 }
 
 
-function AddPlayTime($timesArray)
+function getTotalDuration($timesArray)
 {
        $all_seconds = 0;
        // loop throught all the times

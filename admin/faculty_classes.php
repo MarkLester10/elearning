@@ -7,7 +7,7 @@ require_once  '../app/middlewares/Auth.php';
 
 $class = new Classes();
 $monitor = new Monitor();
-if (!isset($_GET['id'])) {
+if (!isset($_GET['room_id'])) {
     redirect('monitoring_dashboard.php');
     die();
 }
@@ -15,9 +15,7 @@ if (!isset($_GET['id'])) {
 if (isset($_POST['join'])) {
     $monitor->updateClassMonitorStatus($_POST);
 }
-$classes = $monitor->getClassesById($_GET['id']);
-
-$faculties = $monitor->index();
+$classes = $monitor->getClassesById($_GET['room_id']);
 
 
 $activeUser = $class->getUser($_SESSION['id']);

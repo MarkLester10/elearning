@@ -42,6 +42,11 @@ if (isset($_POST['change_pass'])) {
             <div class="row">
                 <div class="col-md-5 mx-auto shadow p-3 bg-white register">
                     <?php include 'app/includes/message.php' ?>
+                    <?php if (isset($_GET['token'])) : ?>
+                        <div class="py-2 px-4 text-center bg-gray-900 text-white rounded-md">
+                            <h2>Set up your password first</h2>
+                        </div>
+                    <?php endif; ?>
                     <form action="<?php echo $_SERVER['PHP_SELF'] . '?token=' . $_GET['token'] ?>" method="POST">
                         <input type="hidden" name="token" value="<?php echo $_GET['token'] ?? '' ?>">
                         <div class="mx-auto shadow-md p-4">

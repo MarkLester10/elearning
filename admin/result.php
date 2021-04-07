@@ -11,16 +11,23 @@ require_once  '../app/middlewares/Auth.php';
 $averageTime = '00:00:00';
 $totalDuration = '00:00:00';
 $class = new Classes();
-$classes = $class->getResults();
-if (!empty($classes)) {
+$classes = $class->getResults();;
 
+// dump($classes);
+
+if (isset($_GET['from_date']) && isset($_GET['to_date'])) {
+  $classes = $class->getResultsByDate($_GET['from_date'], $_GET['to_date']);
+}
+
+
+if (!empty($classes)) {
   $timesArray = [];
   foreach ($classes as $item) {
     array_push($timesArray, $item->duration);
   }
   $averageTime =  date('H:i:s', array_sum(array_map('strtotime', $timesArray)) / count($timesArray));
   // $totalDuration =  date('H:i:s', array_sum(array_map('strtotime', $timesArray)) / 1);
-  $totalDuration = AddPlayTime($timesArray);
+  $totalDuration = getTotalDuration($timesArray);
 }
 
 
@@ -79,6 +86,25 @@ $activeUser = $class->getUser($_SESSION['id']);
 
         <!-- Table -->
         <div class="table-responsive">
+          <div class="my-6 bg-gray-100 p-4">
+            <form class="flex flex-col space-y-4 md:space-y-0 md:flex-row items-center space-x-4" action="#" method="GET" id='filterform'>
+              <div class="from p-2 bg-white w-full">
+                <h4 class="font-bold inline text-gray-900 mr-2">From:</h4>
+                <input type="date" name="from_date" id="from_date" class="form-control">
+              </div>
+              <div class="to p-2 bg-white w-full">
+                <h4 class="font-bold inline text-gray-900 mr-2">To:</h4>
+                <input type="date" name="to_date" id="to_date" class="form-control">
+              </div>
+              <div class="w-full">
+                <button type="submit" class="btn btn-success btn-sm block md:inline" name="filter_date" id="filter">
+                  Filter
+                </button>
+                <a href="results.php" class="btn btn-warning btn-sm">Reset</a>
+              </div>
+            </form>
+
+          </div>
           <table class="table bg-white" id="resultTbl">
             <div class="flex gap-4 w-1/3 my-2">
               <span class="block p-2 bg-green-600 text-white text-lg">
@@ -89,14 +115,16 @@ $activeUser = $class->getUser($_SESSION['id']);
               </span>
             </div>
 
-            <?php echo date('Y-m-d h:i:A') ?>
+            <div class="p-2 bg-gray-800 text-white text-center inline-block my-4">
+              <?php echo formatDate(strtotime(date('Y-m-d h:i:A'))) ?>
+            </div>
+
 
             <thead class="thead-dark">
-              <tr>
-                <th scope="col">DEPARTMENT</th>
+              <tr class="text-center">
+                <th scope="col">DEPARTMENT/SUBJECT/SCHEDULE</th>
                 <th scope="col">MONITORING STAFF</th>
                 <th scope="col">FACULTY NAME</th>
-                <th scope="col">SUBJECT</th>
                 <th scope="col">DATE</th>
                 <th scope="col">START TIME</th>
                 <th scope="col">END TIME</th>
@@ -105,20 +133,25 @@ $activeUser = $class->getUser($_SESSION['id']);
             </thead>
             <tbody>
               <?php foreach ($classes as $key => $singleClass) : ?>
-                <tr>
-                  <th><?php echo $class->getDepartment($singleClass->department_id)->name ?></th>
+                <tr class="text-center">
+                  <td><?php echo $class->getRoom($singleClass->room_id)->subject_name ?></td>
                   <?php $staff = $class->getUser($singleClass->monitoring_id) ?>
                   <td><?php echo (!empty($staff)) ? ucfirst($staff->firstname) . ' ' . ucfirst($staff->lastname) : '<span class="text-danger">pending</span>' ?></td>
                   <td><?php echo ucfirst($activeUser->firstname) . ' ' . ucfirst($activeUser->lastname) ?></td>
-                  <td><?php echo $class->getSubject($singleClass->subject_schedule_id)->subject_name ?></td>
                   <td><?php echo shortDate($singleClass->created_at) ?></td>
                   <td><?php echo formatDate2($singleClass->start_time, true); ?></td>
                   <td><?php echo formatDate2($singleClass->end_time, true); ?></td>
-                  <td>
-                    <?php echo $singleClass->duration ?>
-                    <br>
-                  </td>
-
+                  <?php if ($key == 0) :  ?>
+                    <td class="bg-red-400 text-white">
+                      <?php echo $singleClass->duration ?>
+                      <br>
+                    </td>
+                  <?php else : ?>
+                    <td>
+                      <?php echo $singleClass->duration ?>
+                      <br>
+                    </td>
+                  <?php endif; ?>
                 </tr>
               <?php endforeach ?>
 

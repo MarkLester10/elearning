@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="../assets/admin/css/admin.css?id=<?php time(); ?>">
   <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.dataTables.min.css">
 </head>
 
 
@@ -45,7 +46,7 @@
       <!-- Brand Logo -->
       <a href="../index.php" class="brand-link d-flex align-items-center">
         <img src="../assets/imgs/logo.png" alt="FEA" class="brand-image">
-        <span class="brand-text"><?php echo TITLE ?></span>
+        <span class="brand-text font-bold uppercase"><?php echo TITLE ?></span>
       </a>
       <?php include 'sidebar.php' ?>
       <!-- /.sidebar -->

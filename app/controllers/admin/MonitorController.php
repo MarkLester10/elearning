@@ -9,13 +9,35 @@ class Monitor extends Connection
         parent::__construct();
     }
 
-    public function index()
+    public function index($id)
     {
-        $id = $_SESSION['id'];
-        $sql = "SELECT * FROM users WHERE position_id=2 ORDER BY created_at DESC";
+        $sql = "SELECT * FROM users WHERE position_id=2 AND department_id='$id' ORDER BY id DESC";
         $stmt = $this->conn->query($sql);
         $stmt->execute();
         return $stmt->fetchAll();
+    }
+
+    public function getDepartments()
+    {
+        $id = $_SESSION['id'];
+        $sql = "SELECT * FROM departments";
+        $stmt = $this->conn->query($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    public function getRooms($id)
+    {
+        $sql = "SELECT * FROM rooms WHERE user_id=$id";
+        $stmt = $this->conn->query($sql);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+    public function getRoom($id)
+    {
+        $sql = "SELECT * FROM rooms WHERE id=:id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return  $stmt->fetch();
     }
 
     public function getClassesById($user_id)
@@ -23,6 +45,13 @@ class Monitor extends Connection
         $sql = "SELECT * FROM classes WHERE user_id=:id";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute(['id' => $user_id]);
+        return $stmt->fetchAll();
+    }
+    public function getClassesByRoomId($room_id)
+    {
+        $sql = "SELECT * FROM classes WHERE room_id=:id AND start_time IS NOT NULL AND duration IS NULL";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(['id' => $room_id]);
         return $stmt->fetchAll();
     }
     public function getResults()
@@ -271,25 +300,26 @@ class Monitor extends Connection
         // update is_monitored users table
         // update monitoring_id and is_monitored sa classes table
         $class_id = $data['class_id'];
-        $user_id = $data['user_id'];
+        $faculty_id = $data['faculty_id'];
+        $room_id = $data['room_id'];
 
 
         $sql = "UPDATE users SET is_monitored=:is_monitored WHERE id=:user_id";
         $stmt = $this->conn->prepare($sql);
         $run = $stmt->execute([
             'is_monitored' => 1,
-            'user_id' => $user_id,
+            'user_id' => $faculty_id,
         ]);
         if ($run) {
             $sql = "UPDATE classes SET monitoring_id=:monitoring_id, is_monitored=:is_monitored WHERE id=:class_id";
             $stmt = $this->conn->prepare($sql);
             $updated = $stmt->execute([
-                'monitoring_id' => $user_id,
+                'monitoring_id' => $_SESSION['id'],
                 'is_monitored' => 1,
                 'class_id' => $class_id,
             ]);
             if ($updated) {
-                redirect("monitoring_class_detail.php?class_id=$class_id&user_id=$user_id");
+                redirect("monitoring_class_detail.php?class_id=$class_id&user_id=$faculty_id&room_id=$room_id");
             }
         }
     }

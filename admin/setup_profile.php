@@ -110,7 +110,7 @@ if (isset($_POST['create'])) {
                         </div>
                         <div class="col">
                             <label for="b_day">Birth Date</label>
-                            <small class="text-info">(<?php echo shortDate($activeUser->b_day, false) ?>)</small>
+                            <small class="text-info">(<?php echo ($activeUser->b_day)  ? shortDate($activeUser->b_day, false) : '' ?>)</small>
                             <input type="date" name="b_day" id="b_day" required class="form-control" value="<?php echo $activeUser->b_day ?>">
                         </div>
                     </div>

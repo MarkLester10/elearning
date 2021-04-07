@@ -44,7 +44,7 @@ $subjectsCount = $dashboard->getSubjectsCount();
                     <div class="icon">
                         <i class="fa fa-list-alt"></i>
                     </div>
-                    <a href="types.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="departments.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <!-- ./col -->
@@ -58,7 +58,7 @@ $subjectsCount = $dashboard->getSubjectsCount();
                     <div class="icon">
                         <i class="fas fa-money-check"></i>
                     </div>
-                    <a href="loans.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="subjects.php" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
 

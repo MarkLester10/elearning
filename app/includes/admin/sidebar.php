@@ -65,7 +65,7 @@ $activeUser = $user->getUser();
                 </li>
 
                 <li class="nav-item menu-open
-            <?php echo (strpos(CURRENT_URL, 'department') !== false) ? 'active' : '' ?>
+            <?php echo (strpos(CURRENT_URL, 'admin/department') !== false) ? 'active' : '' ?>
             ">
                     <a href="<?php echo  'departments.php' ?>" class="nav-link">
                         <i class="nav-icon far fa-building"></i>
@@ -74,6 +74,27 @@ $activeUser = $user->getUser();
                         </p>
                     </a>
                 </li>
+                <li class="nav-item menu-open
+            <?php echo (strpos(CURRENT_URL, 'analytics') !== false) ? 'active' : '' ?>
+            ">
+                    <a href="<?php echo  'admin_department_analytics.php' ?>" class="nav-link">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>
+                            Department Analytics
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item menu-open
+            <?php echo (strpos(CURRENT_URL, 'faculty') !== false) ? 'active' : '' ?>
+            ">
+                    <a href="<?php echo  'faculty_data.php' ?>" class="nav-link">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>
+                            Faculty Analytics
+                        </p>
+                    </a>
+                </li>
+
             <?php endif; ?>
 
             <?php if ($_SESSION['position_id'] === 2) : ?>

@@ -13,14 +13,11 @@ $errors = [];
 $subject_name = '';
 $schedule = '';
 $department_id = '';
+$subject_code = '';
 if (isset($_POST['create'])) {
     $subject->create($_POST);
     $errors = $subject->validate();
-    $activeSubject = $subject->getSubject($id);
     $data = $subject->getData();
-    $department_id = sanitize($data['deparment_id']);
-    $schedule = sanitize($data['schedule']);
-    $id = $activeSubject->id;
 }
 
 
@@ -48,6 +45,10 @@ if (isset($_POST['create'])) {
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="subject_code">Subject Code</label>
+                    <input type="text" name="subject_code" id="subject_code" class="form-control" value="<?php echo $subject_code ?>">
+                </div>
+                <div class="form-group">
                     <label for="subject_name">Subject Name</label>
                     <input type="text" name="subject_name" id="subject_name" class="form-control" value="<?php echo $subject_name ?>">
 
@@ -55,7 +56,7 @@ if (isset($_POST['create'])) {
                 <div class="form-group">
                     <label for="schedule">Schedule</label>
                     <input type="text" name="schedule" id="schedule" placeholder="Day - time" value="<?php echo $schedule ?>" class="form-control" required>
-                    <small class="text-info">Eg: Monday- 6:30-8:30 PM</small>
+                    <small class="text-info">Eg: Monday-Thurdsday-Friday 6:30-8:30 PM</small>
                 </div>
                 <div class="form-group d-flex justify-content-end align-items-center mt-2">
                     <a href="subjects.php" class="btn btn-secondary mr-2">Cancel</a>

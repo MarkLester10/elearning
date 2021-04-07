@@ -24,6 +24,7 @@ $subjects = $activeSubject->index();
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Department</th>
+                                <th scope="col">Subject Code</th>
                                 <th scope="col">Subject Name</th>
                                 <th scope="col">Schedule</th>
                                 <th scope="col">Actions</th>
@@ -36,6 +37,7 @@ $subjects = $activeSubject->index();
                                 <tr>
                                     <th scope="row"><?php echo $key + 1 ?></th>
                                     <td><?php echo $activeSubject->getDepartment($subject->department_id)->name ?></td>
+                                    <td><?php echo $subject->subject_code ?></td>
                                     <td><?php echo $subject->subject_name ?></td>
                                     <td><?php echo $subject->schedule ?></td>
 

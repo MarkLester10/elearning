@@ -12,6 +12,7 @@ if (!isset($_GET['class_id']) && !isset($_GET['user_id'])) {
 }
 $activeUser = $class->getUser($_GET['user_id']);
 
+$activeRoom = $class->getRoom($_GET['room_id']);
 
 
 $activeClass = $class->getClass($_GET['class_id']);
@@ -19,6 +20,9 @@ if (empty($activeClass)) {
     redirect('monitoring_dashboard.php');
 }
 
+if (isset($_POST['end_class'])) {
+    $class->updateEndClass($_POST);
+}
 $screenshot = '';
 
 if (!empty($activeClass->screen_shot)) {
@@ -64,8 +68,11 @@ if (isset($_POST['end_class_monitoring'])) {
                             <i class="fa fa-check-circle text-green-500"></i>
                             <a href="monitoring_dashboard.php">Faculty List</a>
                         </li>
+                        <li class="breadcrumb-item flex items-center gap-2">
+                            <a href="monitoring_faculty_classes.php?room_id=<?php echo $activeClass->room_id ?>">Room List</a>
+                        </li>
                         <li class="breadcrumb-item">
-                            <?php echo $activeClass->scheduled_class ?>
+                            <?php echo $monitor->getRoom($activeClass->room_id)->subject_name ?>
                     </ol>
                 </nav>
 
@@ -86,35 +93,40 @@ if (isset($_POST['end_class_monitoring'])) {
 
                 <div class="row  p-2 md:p-4">
                     <div class="col-lg-8 p-4">
-                        <h1 class="font-bold uppercase text-2xl text-center"><?php echo $activeClass->scheduled_class ?>
+                        <h1 class="font-bold uppercase text-2xl text-center">
+                            <?php echo $monitor->getRoom($activeClass->room_id)->subject_name ?>
                         </h1>
 
                         <!-- Form -->
-                        <form action="#" class="mt-12" enctype="multipart/form-data" method="POST">
-                            <div class="form-group">
-                                <div class="flex items-center justify-center border border-red-300 p-6">
-                                    <img src="<?php echo $screenshot ?>" alt="#" class="w-32" id="screenshotPreview">
-                                </div>
+                        <div class="mt-12">
+                            <p>Proof of class:</p>
+                            <div class="flex items-center justify-center border border-red-300 p-6">
+                                <img src="<?php echo $screenshot ?>" alt="#" class="w-32" id="screenshotPreview">
                             </div>
-                            <?php if (is_null($activeClass->screen_shot)) : ?>
-                                <div class="form-group">
-                                    <label for="#">Class Screen Shot</label>
-                                    <input class="form-control" type="file" name="screen_shot" onchange="displayImage(this, '#screenshotPreview')">
+                        </div>
+
+
+
+                        <?php if (empty($activeClass->duration)) : ?>
+                            <div class="flex items-center gap-4 mt-16">
+                                <div class="" id="end_class">
+                                    <form action="<?php echo $_SERVER['PHP_SELF'] . '?room_id=' . $activeRoom->id . '&class_id=' . $activeClass->id ?>" method="POST">
+                                        <input type="hidden" name="class_id" value="<?php echo $activeClass->id ?>">
+                                        <input type="hidden" name="room_id" value="<?php echo $activeRoom->id ?>">
+                                        <button type="submit" name="end_class" class="btn btn-danger btn-md mt-4">End Class</button>
+                                    </form>
                                 </div>
-                            <?php endif; ?>
-
-                            <a href="<?php echo $activeClass->google_meet_link ?>" class="btn btn-success btn-md mt-4" target="_blank" id="start_class">Visit Class</a>
-                        </form>
-
-                        <?php if (is_null($activeClass->duration)) : ?>
-                            <div id="end_class">
-                                <form action="<?php echo $_SERVER['PHP_SELF'] . '?class_id=' . $_GET['class_id'] . '&user_id=' . $_GET['user_id'] ?>" method="POST">
-                                    <input type="hidden" name="class_id" value="<?php echo $_GET['class_id'] ?>">
-                                    <input type="hidden" name="user_id" value="<?php echo $_GET['user_id'] ?>">
-                                    <button type="submit" name="end_class_monitoring" class="btn btn-danger btn-md mt-4">End Class</button>
-                                </form>
+                                <a href="<?php echo $activeRoom->google_meet_link ?>" class="btn btn-success btn-md mt-4" target="_blank" id="start_class">Go to Class</a>
                             </div>
-                        <?php endif ?>
+
+                        <?php else : ?>
+
+                            <div class="bg-green-400 text-white p-2 rounded-md shadow-md mt-4 space-x-3">
+                                <h1 class="text-2xl text-center">This Class Session has been Recorded <i class="fa fa-check text-white-400"></i></h1>
+
+                            </div>
+
+                        <?php endif; ?>
 
 
                     </div>

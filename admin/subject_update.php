@@ -9,6 +9,7 @@ $errors = [];
 $departments = $subject->getDepartments();
 
 $subject_name = '';
+$subject_code = '';
 $schedule = '';
 $department_id = '';
 $id = '';
@@ -16,6 +17,7 @@ if (isset($_POST['id'])) {
     $id = sanitize($_POST['id']);
     $activeSubject = $subject->getSubject($id);
     $subject_name = $activeSubject->subject_name;
+    $subject_code = $activeSubject->subject_code;
     $schedule = $activeSubject->schedule;
     $department_id = $activeSubject->department_id;
     $id = $activeSubject->id;
@@ -49,6 +51,11 @@ if (isset($_POST['update'])) {
                                 <?php echo $department->name ?></option>
                         <?php endforeach; ?>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="subject_code">Subject Code</label>
+                    <input type="text" name="subject_code" id="subject_code" class="form-control" value="<?php echo $subject_code ?>">
+
                 </div>
                 <div class="form-group">
                     <label for="subject_name">Subject Name</label>

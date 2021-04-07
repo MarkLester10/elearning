@@ -2,7 +2,7 @@
 
 // constants
 define('BASE_URL', 'http://localhost/lms/');
-define('TITLE', 'Checked');
+define('TITLE', 'Check');
 define('SERVER_NAME', $_SERVER['SERVER_NAME']);
 define('REQUEST_URI', $_SERVER['REQUEST_URI']);
 define('CURRENT_URL', SERVER_NAME . REQUEST_URI);

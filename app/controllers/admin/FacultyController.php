@@ -29,7 +29,7 @@ if (!empty($dept_id)) {
 }
 //FETCH CLASSES
 if (!empty($faculty_id)) {
-    $sql = "SELECT * FROM classes WHERE user_id=:id";
+    $sql = "SELECT * FROM rooms WHERE user_id=:id";
     $stmt = $conn->prepare($sql);
 
     $stmt->bindValue(':id', $faculty_id);
@@ -65,33 +65,35 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_class') {
 
     // $department = $this->getDepartment($this->data['department_id']);
     // $subject = $this->getSubject(($this->data['subject_schedule_id']));
-    $scheduled_class = $department->name . '-' . $subject->subject_name . '-' . $subject->schedule;
+    $subject_name = $department->name . '/' . $subject->subject_code . '/' . $subject->subject_name . '/' . $subject->schedule;
     $department_id = $data['department_id'];
     $subject_schedule_id = $data['subject_schedule_id'];
     $google_meet_link = $data['google_meet_link'];
     $user_id = $data['faculty_id'];
 
     // check if may existing scheduled class
-    $sql = "SELECT * FROM classes WHERE scheduled_class=:scheduled_class LIMIT 1";
+    $sql = "SELECT * FROM rooms WHERE subject_name=:subject_name LIMIT 1";
     $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':scheduled_class', $scheduled_class);
+    $stmt->bindValue(':subject_name', $subject_name);
     $stmt->execute();
     $class = $stmt->fetch();
     if ($class) {
         $result['is_created'] = 1;
     } else {
-        $sql = "INSERT INTO classes (department_id, scheduled_class, subject_schedule_id, google_meet_link, user_id )
-        VALUES (:department_id, :scheduled_class, :subject_schedule_id, :google_meet_link, :user_id)";
+        $sql = "INSERT INTO rooms (department_id, subject_schedule_id, subject_name, google_meet_link, user_id )
+        VALUES (:department_id, :subject_schedule_id, :subject_name, :google_meet_link, :user_id)";
         $stmt = $conn->prepare($sql);
         $run = $stmt->execute([
             'department_id' => $department_id,
-            'scheduled_class' => $scheduled_class,
             'subject_schedule_id' => $subject_schedule_id,
+            'subject_name' => $subject_name,
             'google_meet_link' => $google_meet_link,
             'user_id' => $user_id,
         ]);
+
+        //department_id	subject_schedule_id	subject_name	google_meet_link	user_id	created_at
         if ($run) {
-            $result['message'] = "Class Successfully Created";
+            $result['message'] = "Room Successfully Created";
         }
     }
 }

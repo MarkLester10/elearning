@@ -59,7 +59,7 @@ $activeUser = $class->getUser($_SESSION['id']);
 
           <div class="mt-4">
             <p v-if="is_created" class="rounded-md shadow-md py-2 px-2 tracking-wider text-sm text-center text-white bg-red-500">
-              You Already have this class.
+              You Already have this room.
             </p>
             <p v-if="message" class="rounded-md shadow-md py-2 px-2 tracking-wider text-sm text-center text-white bg-green-500">
               {{message}}
@@ -114,7 +114,7 @@ $activeUser = $class->getUser($_SESSION['id']);
               <thead class="thead-dark">
                 <tr class="text-center align-items-center">
                   <th scope="col">ROOM ID</th>
-                  <th scope="col">ROOM/DEPARTMENT/SUBJECT/TIME</th>
+                  <th scope="col">DEPARTMENT/SUBJECT/TIME</th>
                   <th scope="col">MONITORING STATUS</th>
                   <th scope="col">Action</th>
                 </tr>
@@ -125,8 +125,8 @@ $activeUser = $class->getUser($_SESSION['id']);
                   <th scope="row" class="text-sm">TCU-MSU - {{classItem.id}}</th>
                   <td>
                     <!-- :href="'/user/profile.php?username='+comment.username+'&id='+comment.user_id" -->
-                    <a :href="'class.php?id='+classItem.id" class="hover:underline text-blue-400">
-                      {{classItem.scheduled_class}}
+                    <a :href="'room.php?room_id='+classItem.id" class="hover:underline text-blue-400">
+                      {{classItem.subject_name}}
                     </a>
                   </td>
                   <td class="d-flex justify-content-center">
@@ -156,5 +156,7 @@ $activeUser = $class->getUser($_SESSION['id']);
   </div>
 </section>
 
+
 <?php ob_flush(); ?>
+
 <?php include '../app/includes/admin/footer.php' ?>

@@ -104,7 +104,7 @@ function sendMail($user, $token)
 
     <body style="background-color:#faf9fc;">
       <div class="logo">
-        <img src="https://i.imgur.com/f2Fvyux.pngg" alt="logo1" />
+        <img src="https://i.imgur.com/f2Fvyux.png" alt="logo1" />
       </div>
 
       <div class="wrapper" style="text-align:center;background-color:#fff;">
@@ -117,6 +117,11 @@ function sendMail($user, $token)
         </h4>
 
         <a style="text-decoration: none;color: #fff;text-align: center;" href="http://localhost/lms/change_password.php?token=' . $token . '" class="btn">Setup Account</a>
+        <br><small style="text-align:center"> OR </small><br><hr>
+        <a style="text-decoration: none;color: blue;text-align: center;" href="http://localhost/lms/change_password.php?token=' . $token . '">
+        http://localhost/lms/change_password.php?token=' . $token . '
+        </a>
+
       </div>
 
       <footer>

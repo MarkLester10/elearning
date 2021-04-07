@@ -72,18 +72,18 @@ class Subject extends Connection
             $subject_name = $this->data['subject_name'];
             $department_id = $this->data['department_id'];
             $schedule = $this->data['schedule'];
-            $sql = "INSERT INTO subjects_schedule (department_id, subject_name, schedule)
-            VALUES (:department_id, :subject_name, :schedule)";
+            $subject_code = $this->data['subject_code'];
+            $sql = "INSERT INTO subjects_schedule (department_id, subject_code, subject_name, schedule)
+            VALUES (:department_id, :subject_code, :subject_name, :schedule)";
             $stmt = $this->conn->prepare($sql);
             $run = $stmt->execute([
                 'department_id' => $department_id,
+                'subject_code' => $subject_code,
                 'subject_name' => $subject_name,
                 'schedule' => $schedule,
             ]);
             if ($run) {
-                // message('success', 'A new subject has been created');
-                $_SESSION['type'] = 'success';
-                $_SESSION['message'] = 'A new subject has been created';
+                message('success', 'A new subject has been created');
                 redirect('subjects.php');
             }
         }
@@ -132,12 +132,14 @@ class Subject extends Connection
         $subject_name = $this->data['subject_name'];
         $schedule = $this->data['schedule'];
         $department_id = $this->data['department_id'];
+        $subject_code = $this->data['subject_code'];
         $id = $this->data['id'];
         if (!array_filter($this->errors)) {
-            $sql = "UPDATE subjects_schedule SET department_id=:department_id, subject_name=:subject_name, schedule=:schedule  WHERE id=:id";
+            $sql = "UPDATE subjects_schedule SET department_id=:department_id, subject_code=:subject_code, subject_name=:subject_name, schedule=:schedule  WHERE id=:id";
             $stmt = $this->conn->prepare($sql);
             $updated = $stmt->execute([
                 'department_id' => $department_id,
+                'subject_code' => $subject_code,
                 'subject_name' => $subject_name,
                 'schedule' => $schedule,
                 'id' => $id

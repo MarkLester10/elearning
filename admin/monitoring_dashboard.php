@@ -4,10 +4,11 @@ require_once '../core.php';
 require_once '../path.php';
 require_once  '../app/includes/admin/header_dashboard.php';
 require_once  '../app/middlewares/Auth.php';
+require_once  '../app/middlewares/MonitoringStaff.php';
 
 $class = new Classes();
 $monitor = new Monitor();
-$faculties = $monitor->index();
+$departments = $monitor->getDepartments();
 
 
 $activeUser = $class->getUser($_SESSION['id']);
@@ -45,7 +46,7 @@ $activeUser = $class->getUser($_SESSION['id']);
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item flex items-center gap-2">
                             <i class="fa fa-check-circle text-green-500"></i>
-                            <a href="#">Faculty List</a>
+                            <a href="monitoring_dashboard.php">Department List</a>
                         </li>
                     </ol>
                 </nav>
@@ -59,28 +60,15 @@ $activeUser = $class->getUser($_SESSION['id']);
                     <table class="table bg-white" id="resultTbl">
                         <thead class="thead-dark">
                             <tr class="text-center align-items-center">
-                                <th scope="col">FACULTY ID</th>
+                                <th scope="col">ID</th>
                                 <th scope="col">DEPARTMENT</th>
-                                <th scope="col">FACULTY NAME</th>
-                                <th scope="col">MONITORING STATUS</th>
                             </tr>
                         </thead>
                         <tbody class="text-center">
-                            <?php foreach ($faculties as $faculty) : ?>
+                            <?php foreach ($departments as $department) : ?>
                                 <tr>
-                                    <td>TCU-MSU - <?php echo $faculty->id ?></td>
-                                    <td><?php echo $monitor->getDepartment($faculty->department_id)->name ?? 'unset' ?></td>
-                                    <td><a href="faculty_classes.php?id=<?php echo $faculty->id ?>" class="text-blue-400"><?php echo ucfirst($faculty->firstname) . ' ' . ucfirst($faculty->lastname) ?></a></td>
-                                    <td class="text-muted">
-                                        <?php if (!$faculty->is_monitored && !$faculty->is_sent_to_monitoring) : ?>
-                                            <span class="text-muted">Idle</span>
-                                        <?php elseif (!$faculty->is_monitored && $faculty->is_sent_to_monitoring) : ?>
-                                            <span class="text-danger">On Going Class - Not Monitored</span>
-                                        <?php elseif ($faculty->is_monitored && $faculty->is_sent_to_monitoring) : ?>
-                                            <span class="text-success">On Going Class - Monitored</span>
-                                        <?php endif ?>
-                                    </td>
-
+                                    <td>TCU-MSU - <?php echo $department->id ?></td>
+                                    <td><a href="monitoring_faculty_detail.php?dept_id=<?php echo $department->id ?>&departmentname=<?php echo $department->name ?>" class="text-info underline"><?php echo $department->name ?></a></td>
                                 </tr>
                             <?php endforeach ?>
 
