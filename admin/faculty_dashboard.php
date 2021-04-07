@@ -115,7 +115,6 @@ $activeUser = $class->getUser($_SESSION['id']);
                 <tr class="text-center align-items-center">
                   <th scope="col">ROOM ID</th>
                   <th scope="col">DEPARTMENT/SUBJECT/TIME</th>
-                  <th scope="col">MONITORING STATUS</th>
                   <th scope="col">Action</th>
                 </tr>
               </thead>
@@ -129,16 +128,6 @@ $activeUser = $class->getUser($_SESSION['id']);
                       {{classItem.subject_name}}
                     </a>
                   </td>
-                  <td class="d-flex justify-content-center">
-                    <div v-if="classItem.start_time != null && classItem.end_time ==null" class="w-4 h-4 rounded-full bg-red-400 relative">
-                      <div class="absolute inset-0 w-full h-full animate-ping bg-red-500 rounded-full">
-                      </div>
-                    </div>
-                    <span v-else-if="classItem.start_time != null && classItem.end_time !=null" class="text-green-500">Recorded</span>
-                    <span v-else class="text-muted">not monitored</span>
-
-                  </td>
-
                   <td>
 
                     <a :href="'faculty_dashboard.php?delete_id='+classItem.id" class="text-danger" onclick="return confirm('Are you sure you want to delete this class?');">

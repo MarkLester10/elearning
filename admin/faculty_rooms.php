@@ -52,7 +52,9 @@ $activeUser = $class->getUser($_SESSION['id']);
                             <a href="monitoring_dashboard.php">Department List</a>
                         </li>
                         <li class="breadcrumb-item flex items-center gap-2">
-                            Faculty Rooms
+                            Rooms of <span class="text-success">
+                                <?php echo ucfirst($monitor->getUser($_GET['faculty_id'])->firstname) . ' ' . ucfirst($monitor->getUser($_GET['faculty_id'])->lastname) ?>
+                            </span>
                         </li>
                     </ol>
                 </nav>
@@ -81,9 +83,11 @@ $activeUser = $class->getUser($_SESSION['id']);
                             <?php foreach ($rooms as $room) : ?>
                                 <tr>
                                     <td>TCU-MSU -<?php echo $room->id ?></td>
-                                    <td><a href="monitoring_faculty_classes.php?room_id=<?php echo $room->id ?>" class="text-info underline">
+                                    <td>
+                                        <a href="monitoring_faculty_classes.php?room_id=<?php echo $room->id ?>&faculty_id=<?php echo $_GET['faculty_id']; ?>" class="text-info underline">
                                             TCU-MSU -<?php echo $room->subject_name ?>
-                                        </a></td>
+                                        </a>
+                                    </td>
                                     <td class="text-muted">
                                         <?php $class = $monitor->getClassesByRoomId($room->id); ?>
                                         <?php if (!empty($class)) : ?>

@@ -47,11 +47,20 @@ $activeUser = $class->getUser($_SESSION['id']);
                 <?php include '../app/includes/message.php' ?>
 
                 <!-- breadcrumbs -->
+
                 <nav aria-label="breadcrumb" class="mt-6">
                     <ol class="breadcrumb">
+
                         <li class="breadcrumb-item flex items-center gap-2">
-                            <i class="fa fa-check-circle text-green-500"></i>
-                            <a href="#">Faculty List</a>
+                            <a href="faculty_rooms.php?faculty_id=<?php echo $_GET['faculty_id'] ?>&name=<?php echo ucfirst($monitor->getUser($_GET['faculty_id'])->firstname) . ' ' . ucfirst($monitor->getUser($_GET['faculty_id'])->lastname) ?>">
+                                Rooms of <span class="text-success">
+                                    <?php echo ucfirst($monitor->getUser($_GET['faculty_id'])->firstname) . ' ' . ucfirst($monitor->getUser($_GET['faculty_id'])->lastname) ?>
+                                </span>
+                            </a>
+                        </li>
+                        </li>
+                        <li class="breadcrumb-item flex items-center gap-2">
+                            <?php echo $class->getRoom($_GET['room_id'])->subject_name ?>
                         </li>
                     </ol>
                 </nav>
@@ -77,7 +86,7 @@ $activeUser = $class->getUser($_SESSION['id']);
                             <tbody>
                                 <?php foreach ($classes as $key => $singleClass) : ?>
                                     <tr class="text-center">
-                                        <th scope="row" class="text-sm">TCU-MSU - <?php echo $singleClass->id ?></th>
+                                        <td scope="row" class="text-sm">TCU-MSU - <?php echo $singleClass->id ?></th>
                                         <td>
                                             <?php echo $monitor->getRoom($singleClass->room_id)->subject_name; ?>
                                         </td>
@@ -119,19 +128,18 @@ $activeUser = $class->getUser($_SESSION['id']);
                                                     <button type="submit" class="btn btn-success btn-sm" name="join">Join</button>
                                                 </form>
                                             <?php elseif (!is_null($singleClass->duration)) : ?>
-                                                <div class="flex items-center space-x-2 btn btn-warning btn-sm">
-                                                    <i class="fa fa-eye"></i>
-                                                    <a href="monitoring_class_detail.php?class_id=<?php echo $singleClass->id ?>&user_id=<?php echo $singleClass->user_id ?>&room_id=<?php echo $singleClass->room_id ?>">
-                                                        View
-                                                    </a>
-                                                </div>
+
+
+                                                <a class="btn btn-warning btn-sm" href="monitoring_class_detail.php?class_id=<?php echo $singleClass->id ?>&user_id=<?php echo $singleClass->user_id ?>&room_id=<?php echo $singleClass->room_id ?>">
+                                                    <i class="fa fa-eye"></i>&ThickSpace;View
+                                                </a>
+
                                             <?php elseif (!is_null($singleClass->monitoring_id) && $singleClass->is_monitored) : ?>
-                                                <div class="flex items-center space-x-2 btn btn-warning btn-sm">
-                                                    <i class="fa fa-eye"></i>
-                                                    <a href="monitoring_class_detail.php?class_id=<?php echo $singleClass->id ?>&user_id=<?php echo $singleClass->user_id ?>&room_id=<?php echo $singleClass->room_id ?>">
-                                                        View
-                                                    </a>
-                                                </div>
+
+                                                <a class="btn btn-warning btn-sm" href="monitoring_class_detail.php?class_id=<?php echo $singleClass->id ?>&user_id=<?php echo $singleClass->user_id ?>&room_id=<?php echo $singleClass->room_id ?>">
+                                                    <i class="fa fa-eye"></i>&ThickSpace;View
+                                                </a>
+
                                             <?php else : ?>
                                                 Unavailable
                                             <?php endif; ?>

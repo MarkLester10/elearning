@@ -2,7 +2,7 @@
 ob_start();
 require_once '../core.php';
 require_once '../path.php';
-require_once  '../app/includes/admin/header.php';
+require_once  '../app/includes/admin/header_dashboard.php';
 require_once  '../app/middlewares/Auth.php';
 
 

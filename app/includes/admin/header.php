@@ -27,6 +27,29 @@
 <body class="hold-transition sidebar-mini layout-fixed">
   <div id="fb-root"></div>
   <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v9.0&appId=749751495614026&autoLogAppEvents=1" nonce="JUf8uuB4"></script>
+  <!-- Messenger Chat Plugin Code -->
+  <div id="fb-root"></div>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        xfbml: true,
+        version: 'v10.0'
+      });
+    };
+
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+  <!-- Your Chat Plugin code -->
+  <div class="fb-customerchat" attribution="page_inbox" page_id="112511400941122">
+  </div>
   <div class="wrapper">
     <!-- Navbar -->
     <?php include 'navbar.php' ?>

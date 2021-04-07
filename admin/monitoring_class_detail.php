@@ -66,10 +66,7 @@ if (isset($_POST['end_class_monitoring'])) {
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item flex items-center gap-2">
                             <i class="fa fa-check-circle text-green-500"></i>
-                            <a href="monitoring_dashboard.php">Faculty List</a>
-                        </li>
-                        <li class="breadcrumb-item flex items-center gap-2">
-                            <a href="monitoring_faculty_classes.php?room_id=<?php echo $activeClass->room_id ?>">Room List</a>
+                            <a href="monitoring_dashboard.php">Department List</a>
                         </li>
                         <li class="breadcrumb-item">
                             <?php echo $monitor->getRoom($activeClass->room_id)->subject_name ?>

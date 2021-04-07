@@ -78,8 +78,6 @@ class UserController extends Connection
                 'id' => $user->id,
             ]);
             if ($run) {
-
-                echo 'password updated';
                 message('success', 'You have successfuly added password to your account');
                 $_SESSION['id'] = $user->id;
                 $_SESSION['position_id'] = $user->position_id;
@@ -280,7 +278,7 @@ class UserController extends Connection
             $this->addError('password1', 'Invalid Credentials. An email or password is incorrect. Please try again');
         } else {
             if ($user->password === 'secret123') {
-                echo 'secretsjdskafja';
+                redirect('login.php');
             } else {
                 $_SESSION['id'] = $user->id;
                 $_SESSION['position_id'] = $user->position_id;

@@ -286,6 +286,8 @@ class Classes extends Connection
         $duration = calculateDuration($activeClass->start_time, $end_time);
         $final_duration = $duration[0] . ':' . $duration[1] . ':' . $duration[2];
 
+        $activeRoom = $this->getRoom($current_room);
+
 
         $sql = "UPDATE classes SET end_time=:end_time, duration=:duration  WHERE id=:id  AND room_id=:room_id";
         $stmt = $this->conn->prepare($sql);
@@ -301,13 +303,15 @@ class Classes extends Connection
             $run = $stmt->execute([
                 'is_sent_to_monitoring' => 0,
                 'is_monitored' => 0,
-                'user_id' => $_SESSION['id'],
+                'user_id' => $activeClass->user_id,
             ]);
 
             if ($_SESSION['position_id'] == 2) {
                 redirect('room.php?room_id=' . $current_room);
             } elseif ($_SESSION['position_id'] == 3) {
-                redirect('monitoring_faculty_classes.php?room_id=' . $current_room);
+                redirect('monitoring_faculty_classes.php?room_id=' . $current_room . '&room_name='
+                    . $activeRoom->subject_name . '&faculty_id=' . $activeClass->user_id);
+                //room nanme, faculty id
             }
 
             //monitoring_faculty_classes.php?room_id=13
