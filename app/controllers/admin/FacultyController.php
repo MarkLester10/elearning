@@ -72,9 +72,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'add_class') {
     $user_id = $data['faculty_id'];
 
     // check if may existing scheduled class
-    $sql = "SELECT * FROM rooms WHERE subject_name=:subject_name LIMIT 1";
+    $sql = "SELECT * FROM rooms WHERE subject_name=:subject_name AND user_id=:user_id LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bindValue(':subject_name', $subject_name);
+    $stmt->bindValue(':user_id', $user_id);
     $stmt->execute();
     $class = $stmt->fetch();
     if ($class) {

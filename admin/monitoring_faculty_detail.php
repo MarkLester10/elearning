@@ -88,7 +88,7 @@ $activeUser = $class->getUser($_SESSION['id']);
                                             <span class="text-success">On Going Class - Monitored</span>
                                         <?php endif ?>
                                     </td>
-                                    <td>`
+                                    <td>
                                         <a href="faculty_rooms.php?faculty_id=<?php echo $faculty->id ?>&name=<?php echo ucfirst($monitor->getUser($faculty->id)->firstname) . ' ' . ucfirst($monitor->getUser($faculty->id)->lastname) ?>" class="btn btn-warning btn-sm space-x-2 p-2">
                                             <i class="fa fa-eye"></i> View Rooms
                                         </a>
