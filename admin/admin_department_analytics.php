@@ -31,7 +31,7 @@ array_push($departments_name, 'BSIT');
         </div>
 
         <div class="my-6 bg-gray-100 p-4">
-            <form class="flex flex-col space-y-4 md:space-y-0 md:flex-row items-center space-x-4" action="#" method="GET" id='filterform'>
+            <form class="flex flex-col space-y-4 md:space-y-0 md:flex-row items-center space-x-4" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="GET" id='filterform'>
                 <div class="from p-2 bg-white w-full">
                     <h4 class="font-bold inline text-gray-900 mr-2">From:</h4>
                     <input type="date" name="from_date" id="from_date" class="form-control">

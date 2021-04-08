@@ -99,10 +99,11 @@ if (empty($activeRoom)) {
                 <?php echo $activeRoom->subject_name ?>
               </h1>
 
+
               <div class="mt-12">
                 <p>Proof of class:</p>
-                <div class="flex items-center justify-center border border-red-300 p-6">
-                  <img src="<?php echo $screenshot ?>" alt="#" class="w-32" id="screenshotPreview">
+                <div class="flex items-center justify-center border border-red-300 p-3">
+                  <img src="<?php echo $screenshot ?>" alt="#" class="w-11/12 mx-auto object-cover" id="screenshotPreview">
                 </div>
               </div>
 
